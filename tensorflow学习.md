@@ -31,14 +31,6 @@ Tensor具有以下几个属性：
 	
 Variables也是一种tensor，训练模型时，变量用来存储和更新参数，使用之前需要显示的初始化操作，而在模型训练后必须存放至磁盘中。神经网络中，Variables一般都是模型参数，在每轮训练时保存更新后的参数，并且变量还可以被模型保存和加载。一个Variable代表一个可修改的张量，存在在TensorFlow的用于描述交互性操作的图中。它们可以用于计算输入值，也可以在计算中被修改。
 
-##TensorFlow 基本API
-##变量
-	
-
-	tf.get_variable(name, shape=None, dtype=tf.float32, initializer=None, trainable=True, collections=None)  --此方法用户获得变量的值
-
-
-
 
 ##Tensorflow 数据输入
 
