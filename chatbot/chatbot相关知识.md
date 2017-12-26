@@ -25,6 +25,9 @@ TFIDF的主要思想是：如果某个词或短语在一篇文章中出现的频
 2. TFIDF中IDF的计算增大了Documents中生僻词的权重。
 3. TFIDF的计算 需要使用较大的数据集。
 
+### 2，N-Gram语言模型
+
+
 #引用
 [1. TF-IDF及其算法]  http://blog.csdn.net/sangyongjia/article/details/52440063
 
