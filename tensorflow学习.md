@@ -98,3 +98,5 @@ SoftMax函数中样本属于第j类的概率如下：
 #文献
 [1. 指数分布簇](http://www.cnblogs.com/BYRans/p/4735409.html)
 
+  
+
