@@ -25,19 +25,22 @@ TFIDF的主要思想是：如果某个词或短语在一篇文章中出现的频
 2. TFIDF中IDF的计算增大了Documents中生僻词的权重。
 3. TFIDF的计算 需要使用较大的数据集。
 
-### 2，N-Gram语言模型
+###2, 语言模型
+#### 2.1，N-Gram语言模型
 n-gram是自然语言处理中的一种非常重要的模型。
-####2.1 基于n-gram模型定义的字符串距离
+#####2.1.1 基于n-gram模型定义的字符串距离
 字符串的相似度，不仅可以使用余弦相似度、杰卡德相似系数、编辑距离、最长相同字符串、最长相同字符序列等，还可以使用n-gram距离。n-gram距离定义如下：设定两个字符串s、t，计算字符串s的n-gram序列和字符串t的n-gram序列，则n-gram距离公式如下：
 <div align=center>
 <a href="http://www.codecogs.com/eqnedit.php?latex=\left&space;|&space;G_{n}(s)&space;\right&space;|&plus;\left&space;|&space;G_{n}(t)&space;\right&space;|&space;-&space;2*|&space;G_{n}(s)\bigcap&space;G_{n}(t)|" target="_blank"><img src="http://latex.codecogs.com/gif.latex?\left&space;|&space;G_{n}(s)&space;\right&space;|&plus;\left&space;|&space;G_{n}(t)&space;\right&space;|&space;-&space;2*|&space;G_{n}(s)\bigcap&space;G_{n}(t)|" title="\left | G_{n}(s) \right |+\left | G_{n}(t) \right | - 2*| G_{n}(s)\bigcap G_{n}(t)|" /></a></div>
+<div align=center>
 或
+</div>
 <div align=center>
 <a href="http://www.codecogs.com/eqnedit.php?latex=\frac{2*|G_{n}(s)\bigcap&space;G_{n}(t)|}{|G_{n}(s)|&plus;|G_{n}(t)|}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?\frac{2*|G_{n}(s)\bigcap&space;G_{n}(t)|}{|G_{n}(s)|&plus;|G_{n}(t)|}" title="\frac{2*|G_{n}(s)\bigcap G_{n}(t)|}{|G_{n}(s)|+|G_{n}(t)|}" /></a></div>
 
 其中Gn(s)代表字符串s中的n-gram序列，同理Gn(t)代表字符串t中的n-gram序列。
 
-####2.2 利用n-gram评估语句是否合理
+#####2.1.2 利用n-gram评估语句是否合理
 在已给语料的情况下，n-gram还可以用于判断所给句子s是否合理，例如，与马尔科夫链相结合的方式，2-gram公式如下：
 <div align=center>
 <a href="http://www.codecogs.com/eqnedit.php?latex=p(w_{1},w_{2},w_{3}...w_{n})&space;=&space;\prod_{i=1}^{n}p(w_{i}|w_{i-1})" target="_blank"><img src="http://latex.codecogs.com/gif.latex?p(w_{1},w_{2},w_{3}...w_{n})&space;=&space;\prod_{i=1}^{n}p(w_{i}|w_{i-1})" title="p(w_{1},w_{2},w_{3}...w_{n}) = \prod_{i=1}^{n}p(w_{i}|w_{i-1})" /></a>
@@ -51,7 +54,11 @@ n-gram是自然语言处理中的一种非常重要的模型。
 5. Absolute discounting 
 6. Kneser-Ney
 
-####2.3 n-gram语言模型与朴素贝叶斯
+#####2.1.3 n-gram语言模型与朴素贝叶斯
+朴素贝叶斯的一个非常大的局限性在于其条件独立性，文本分类中假设BOW模型中词语之间相互独立，省略了位置顺序的信息。
+
+n-gram即可使其从条件独立性==>联合概率链规则。在文本分类领域中，可以把独立性假设理解为1-gram模型。
+
 
 ### 3，马尔科夫理论
 ####3.1 马尔科夫链假设
