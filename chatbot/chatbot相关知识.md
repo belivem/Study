@@ -141,7 +141,16 @@ n-gram即可使其从条件独立性==>联合概率链规则。在文本分类�
 
 ### 3，马尔科夫理论
 
-#### 3.1 马尔科夫链假设
+#### 3.1 隐马尔科夫模型 HMM
+
+HMM描述一个隐藏的马尔科夫链生成不可观测的状态随机序列，再由各个状态生成观测随机序列的过程。
+
+<div align=center>
+<a href="http://www.codecogs.com/eqnedit.php?latex=tf_{i,j}&space;=&space;\frac{n_{i,j}}{\sum&space;_{k}n_{k,j}}" target="_blank"><img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/3pCBpZqAZLB4HxPDrmeDSusq62mnjyd.ifZ2gZHYwlI!/b/dD8BAAAAAAAA&bo=GwP6AAAAAAADB8A!&rf=viewer_4" /></a></div>
+
+
+
+#### 3.2 马尔科夫链假设
 当前词只与前面几个有限的词相关。
 
 # 引用
