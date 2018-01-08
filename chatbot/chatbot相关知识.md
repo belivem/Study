@@ -77,13 +77,30 @@ P代表样本的真实分布，Q代表样本的一个错误分布，则信息熵
 
 1. 交叉熵可以作为神经网络中的损失函数，其中P表示真实的分布，而Q表示训练后模型的预测标记分布。
 
+
 #### 2.3，互信息
+
+互信息I(X,Y)描述两个随机变量X和Y的相关性，也即已知X后，Y不确定性的减少量[即H(Y)的减少量]，反之亦然。
 
 互信息指两个变量的独立程度，定义为两个变量X,Y的联合分布和独立分布乘积的相对熵，公式为：
 <div align=center>
 <a href="http://www.codecogs.com/eqnedit.php?latex=I(X,Y)&space;=&space;D(P(X,Y)||P(X)P(Y))&space;=&space;\sum_{xy}^{n}P(x,y)log\frac{P(x,y)}{p(x)p(y)}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?I(X,Y)&space;=&space;D(P(X,Y)||P(X)P(Y))&space;=&space;\sum_{xy}^{n}P(x,y)log\frac{P(x,y)}{p(x)p(y)}" title="I(X,Y) = D(P(X,Y)||P(X)P(Y)) = \sum_{xy}^{n}P(x,y)log\frac{P(x,y)}{p(x)p(y)}" /></a></div>
 
 相对熵D(P||Q)代表分布P和分布Q的相似程度，相对熵越大，代表分布P和Q的相似度越小，若P==Q，则相对熵为0；互信息代表I(X,Y)代表两个分布X和Y的 联合概率分布和独立分布乘积的相对熵，若P(x,y) == P(x)P(y)那么变量X和变量Y独立，也即变量X,Y的联合概率分布和独立分布的相对熵为0；
+
+### 2.4 条件熵
+
+条件熵H(Y|X)指给定X分布的情况下，随机变量Y的不确定性度量。 ==>> X在给定条件下，Y分布的熵对X的数学期望。
+条件熵的公式如下：
+<div align=center>
+<a href="http://www.codecogs.com/eqnedit.php?latex=H(Y|X)&space;=&space;\sum_{x&space;\subset&space;X}^{nx}&space;p(x)H(Y|X=x)&space;=&space;\sum_{x&space;\subset&space;X}^{nx}&space;\sum_{y&space;\subset&space;Y}^{ny}p(x,y)log(y|x)" target="_blank"><img src="http://latex.codecogs.com/gif.latex?H(Y|X)&space;=-&space;\sum_{x&space;\subset&space;X}^{nx}&space;p(x)H(Y|X=x)&space;=-&space;\sum_{x&space;\subset&space;X}^{nx}&space;\sum_{y&space;\subset&space;Y}^{ny}p(x,y)log(y|x)" title="H(Y|X) = \sum_{x \subset X}^{nx} p(x)H(Y|X=x) = \sum_{x \subset X}^{nx} \sum_{y \subset Y}^{ny}p(x,y)log(y|x)" /></a></div>
+
+### 2.5 联合熵
+
+联合熵代表元素(x,y)的联合信息量的数学期望，联合概率分布的不确定性。公式为：
+<div align=center>
+<a href="http://www.codecogs.com/eqnedit.php?latex=H(X,Y)&space;=&space;-\sum_{x\subset&space;X}^{nx}\sum_{y\subset&space;Y}^{ny}p(x,y)logp(x,y)" target="_blank"><img src="http://latex.codecogs.com/gif.latex?H(X,Y)&space;=&space;-\sum_{x\subset&space;X}^{nx}\sum_{y\subset&space;Y}^{ny}p(x,y)logp(x,y)" title="H(X,Y) = -\sum_{x\subset X}^{nx}\sum_{y\subset Y}^{ny}p(x,y)logp(x,y)" /></a></div>
+
 
 #### 2.4，最大熵
 
@@ -129,7 +146,6 @@ P代表样本的真实分布，Q代表样本的一个错误分布，则信息熵
    2. 噪声信道模型完全基于统计贝叶斯公式--对语料的要求较高，其有效性可能有一定的影响--受限。
 	
 
-
 ### 2，统计语言模型--N-Gram语言模型
 n-gram是自然语言处理中的一种非常重要的模型。
 #### 2.1 基于n-gram模型定义的字符串距离
@@ -171,9 +187,11 @@ word2Vec是一种词转换为空间向量的模型工具，使得具有相似语
 
 其中skip gram模型用于给定关键字，预测其各个上下文字的概率；CBOW模型用于给定上下文，预测输入关键字。
 
-#### 3.1 skip gram模型
+#### 3.1 skip-gram模型
 
 skip gram模型是一种非常重要的模型，可用于计算语义相关度。skip gram根据输入的关键字通过神经网络预测其上下文字，但是并不记录训练好的神经网络，仅仅记录神经网络中隐层的权值矩阵[权值矩阵记录了每个词对应的词向量]。
+
+word2vec中词向量的生成就是基于skip-gram模型，并且word2vec有一个API，给定一个词获得语义最相近的词，其也基于skip-gram模型。
 
 n-gram模型中，所有的词都来自于训练数据中，使用神经网络由词转换为词向量之前，需计算出训练数据中的词袋,对于训练数据中的任一单词均采用词袋模型的one-hot编码方式[00001000]。
 
