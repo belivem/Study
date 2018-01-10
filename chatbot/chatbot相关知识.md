@@ -108,18 +108,12 @@ P代表样本的真实分布，Q代表样本的一个错误分布，则信息熵
 
 最大熵模型是统计学的一般原理，是概率模型学习的一个准则。最大熵原理认为，学习概率模型时，在所有可能的概率模型中，熵最大的模型是一种最好的模型 ==》 也即在已知的条件下，寻找熵最大--也即不人为增加已有的知识，不确定性最大。最大熵模型根据最大熵原理在一定的特征限制下选择最优的 概率分布。
 
-### 3, 随机场
-
-#### 3.1, 条件随机场
-
-
-### 4， 分布
-
-#### 4.1 吉布斯分布
+### 3， 分布
+#### 3.1 吉布斯分布
 
 
 ## 二、 统计模型
-
+NLP中统计模型是指完全利用先验知识统计得到参数模型，常见的方法有 噪声信道模型、N-GRAM模型、最大熵模型、最大熵马尔科夫模型、条件随机场和神经网络模型等。
 ### 1，噪声信道模型
 噪声信道模型是一个非常重要的模型，在很多领域都有重要的作用--试图通过有噪声的输出信号恢复其输入信号。其形式如下：
 
@@ -179,68 +173,14 @@ n-gram是自然语言处理中的一种非常重要的模型。
 
 n-gram即可使其从条件独立性==>联合概率链规则。在文本分类领域中，可以把独立性假设理解为1-gram模型。
 
-### 3，word2Vec实现模型
-word2Vec是一种词转换为空间向量的模型工具，使得具有相似语义的单词具有相近的词向量。其中语言模型主要包含两种，分别是skip gram模型、CBOW模型。
+n-gram模型的缺陷：
+
+1. 需要平滑处理。
+
+### 3，统计语言模型--神经概率模型
 
 <div align=center>
-<a href="http://www.codecogs.com/eqnedit.php?latex=tf_{i,j}&space;=&space;\frac{n_{i,j}}{\sum&space;_{k}n_{k,j}}" target="_blank"><img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/07t1yc83hqBoPNCvUgXwDUJOTrKcR34AYFYKjiATCIU!/b/dPMAAAAAAAAA&bo=jgKFAQAAAAADFzo!&rf=viewer_4" /></a></div>
-
-其中skip gram模型用于给定关键字，预测其各个上下文字的概率；CBOW模型用于给定上下文，预测输入关键字。
-
-#### 3.1 skip-gram模型
-
-skip gram模型是一种非常重要的模型，可用于计算语义相关度。skip gram根据输入的关键字通过神经网络预测其上下文字，但是并不记录训练好的神经网络，仅仅记录神经网络中隐层的权值矩阵[权值矩阵记录了每个词对应的词向量]。
-
-word2vec中词向量的生成就是基于skip-gram模型，并且word2vec有一个API，给定一个词获得语义最相近的词，其也基于skip-gram模型。
-
-n-gram模型中，所有的词都来自于训练数据中，使用神经网络由词转换为词向量之前，需计算出训练数据中的词袋,对于训练数据中的任一单词均采用词袋模型的one-hot编码方式[00001000]。
-
-skip-gram模型训练起始，不仅需要指出词向量的维数--即神经网络中隐层的神经元个数，还需指定skip_windows(输入词的前后词个数)和nums_skips(代表从窗口中取多少个不同词作为out_put word)大小，例如 skip_windows = 2:
-
-<div align=center>
-<a href="http://www.codecogs.com/eqnedit.php?latex=tf_{i,j}&space;=&space;\frac{n_{i,j}}{\sum&space;_{k}n_{k,j}}" target="_blank"><img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/0bmr*.uXmQ6d9pmR5OSJ0tJxgVgbx96nr8.Lqu5OZoQ!/b/dPIAAAAAAAAA&bo=iwKKAQAAAAADByA!&rf=viewer_4" /></a></div>
-
-如下图，训练数据格式如下{input_word,output_word},其中input_word和output_word都采用one_hot的表示方式。神经网络输入input_word,输出词袋中各个词的共现概率，采用softmax分类器，使得output_word对应的位置概率最大，而其他位置概率最小，迭代训练使得全局的误差最小。 最终生成的权值矩阵即可作为词袋模型中每个词的词向量[对应隐层的神经元个数]。
-
-<div align=center>
-<a href="http://www.codecogs.com/eqnedit.php?latex=tf_{i,j}&space;=&space;\frac{n_{i,j}}{\sum&space;_{k}n_{k,j}}" target="_blank"><img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/5*RgX59n1t6L0yr.BIOWN.q3jAXDhmSCC3exhC2DMs8!/b/dPMAAAAAAAAA&bo=VQOAAgAAAAARB.Q!&rf=viewer_4" width=600 height=400/></a></div>
-
-训练存在的问题:
-
-神经网络训练之前，需要得到训练数据的词袋模型，假如词袋模型中词的个数为10000，每个词对应300维的词向量，那么输入层==> 隐层大约需要优化10000x300个参数，而隐层 ==> 输出层也需优化 10000x300个参数，这就造成非常大的时空开销，解决此问题 word2vec提出了一下3个方法:
-
-	1.  将常见的单词组合（word pairs）或者词组作为单个“words”来处理。
-	2.  对高频次单词进行抽样来减少训练样本的个数。 
-	3.  对优化目标采用“negative sampling”[负采样]方法，这样每个训练样本的训练只会更新一小部分的模型权重，从而降低计算负担。
-
-其中方法3不仅大大降低了训练过程中的计算负担，而且也提高了训练的词向量的质量。不同于原本每个训练样本更新所有的权重，负采样每次让一个训练样本仅仅更新一小部分的权重，这样就会降低梯度下降过程中的计算量。
-
-
-
-skip_gram模型采用多层神经网络计算共现词的概率，基于如下假设：若两个词共现的其他词越相似，那么这两个词的语义也就越相似，那么两个词的词向量也就越接近。
-
-模型缺陷：
-
-1. 采用多层神经网络+softmax分类器，训练的目标在于使得全局的损失函数最小化，导致训练时间过长。
-2. 模型不够强健，对于新词或训练语料中没有的词，其不生成词向量[可采用fastTest n-gram模型解决]。
-3. 要求训练语料足够多，足够覆盖大部分词，足以覆盖大部分情况。
-
-#### 3.2 CBOW模型
-
-### 3，马尔科夫理论
-
-#### 3.1 隐马尔科夫模型 HMM
-
-HMM描述一个隐藏的马尔科夫链生成不可观测的状态随机序列，再由各个状态生成观测随机序列的过程。
-
-<div align=center>
-<a href="http://www.codecogs.com/eqnedit.php?latex=tf_{i,j}&space;=&space;\frac{n_{i,j}}{\sum&space;_{k}n_{k,j}}" target="_blank"><img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/3pCBpZqAZLB4HxPDrmeDSusq62mnjyd.ifZ2gZHYwlI!/b/dD8BAAAAAAAA&bo=GwP6AAAAAAADB8A!&rf=viewer_4" /></a></div>
-
-
-
-#### 3.2 马尔科夫链假设
-当前词只与前面几个有限的词相关。
-
+<a href="http://www.codecogs.com/eqnedit.php?latex=tf_{i,j}&space;=&space;\frac{n_{i,j}}{\sum&space;_{k}n_{k,j}}" target="_blank"><img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/KPpzNQx7gFx.*KjjMYuitdA9YSeYoWVBvjiZsrR6oFE!/b/dF8BAAAAAAAA&bo=7QJWAQAAAAADB5o!&rf=viewer_4" /></a></div>
 
 
 
@@ -249,8 +189,6 @@ HMM描述一个隐藏的马尔科夫链生成不可观测的状态随机序列�
 [1. TF-IDF及其算法]  http://blog.csdn.net/sangyongjia/article/details/52440063
 [2. NLP基础知识]  https://www.cnblogs.com/taojake-ML/p/6413715.html
 [3. 最大熵模型中的数学推导]  http://blog.csdn.net/v_july_v/article/details/40508465
-[4. 一文详解Word2vec之Skip-Gram模型]  http://www.sohu.com/a/151486278_651893
-
 
 
 
