@@ -44,12 +44,15 @@ word2Vec是一种词转换为空间向量的模型工具，使得具有相似语
 
 其中skip gram模型用于给定关键字，预测其各个上下文字的概率；CBOW模型用于给定上下文，预测输入关键字。
 
-SKIP-GRAM模型优化的目标函数如下：
+SKIP-GRAM模型优化的对数目标函数如下：
+<div align=center>
+<a href="http://www.codecogs.com/eqnedit.php?latex=\sum_{w\subset&space;C}^{C}logP(\frac{Context(w)}{w})" target="_blank"><img src="http://latex.codecogs.com/gif.latex?\sum_{w\subset&space;C}^{C}logP(\frac{Context(w)}{w})" title="\sum_{w\subset C}^{C}logP(\frac{Context(w)}{w})" /></a></div>
 
+CBOW模型优化的对数目标函数如下：
+<div align=center>
+<a href="http://www.codecogs.com/eqnedit.php?latex=\sum_{w\subset&space;C}^{C}logP(\frac{w}{Context(w)})" target="_blank"><img src="http://latex.codecogs.com/gif.latex?\sum_{w\subset&space;C}^{C}logP(\frac{w}{Context(w)})" title="\sum_{w\subset C}^{C}logP(\frac{w}{Context(w)})" /></a></div>
 
-
-CBOW模型优化的目标函数如下：
-
+其中C代表词w所属的文本，Context(w)代表词w的上下文。SKIP-GRAM模型在已知词w的情况下，取得Context(w)出现的最大概率。而CBOW模型在已知词w上下文Context(w)的情况下，取得词w出现的最大概率。
 
 #### 2.1 skip-gram模型
 
