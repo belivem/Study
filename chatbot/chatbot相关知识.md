@@ -183,7 +183,6 @@ n-gram模型的缺陷：
 <a href="http://www.codecogs.com/eqnedit.php?latex=tf_{i,j}&space;=&space;\frac{n_{i,j}}{\sum&space;_{k}n_{k,j}}" target="_blank"><img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/KPpzNQx7gFx.*KjjMYuitdA9YSeYoWVBvjiZsrR6oFE!/b/dF8BAAAAAAAA&bo=7QJWAQAAAAADB5o!&rf=viewer_4" /></a></div>
 
 
-
 # 引用
 
 [1. TF-IDF及其算法]  http://blog.csdn.net/sangyongjia/article/details/52440063
