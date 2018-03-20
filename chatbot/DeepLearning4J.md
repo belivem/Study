@@ -224,6 +224,10 @@ LSTM增加网络层数：
 # 引用
 [1, 循环神经网络介绍] (http://blog.csdn.net/heyongluoyao8/article/details/48636251)
 [2, RNN & LSTM 网络结构及应用] (https://www.jianshu.com/p/f3bde26febed)
+[3, 自适应学习率调整] (http://www.cnblogs.com/neopenx/p/4768388.html)
+[4, 各种优化算法比较] (http://blog.csdn.net/luo123n/article/details/48239963)
+
+
 
 
 
