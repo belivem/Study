@@ -94,6 +94,41 @@ Adadelta是对Adagrad的一个扩展，其目的在于采用一阶的方法，�
 <img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/FocderlHxjXwR9KsrXg4rkEDaNaWV3zIgRaikVsDIpg!/b/dEIBAAAAAAAA&bo=SgPZAQAAAAADB7M!&rf=viewer_4" width="800" height="400" alt="updater算法"/>
 </div>
 
+
+## 1.2 损失函数
+损失函数是模型对于数据拟合程度的度量，损失函数值越大，那么模型的拟合性越差。同时我们还期望，在损失函数值较大时，模型的梯度也能够较大，这样模型变量也就会更新的越快 -- 这个在一定程度上是合理存在的，但是并不现实，因为梯度代表了变化程度。
+
+	1.	回归任务通常选择MSE、MEAN_ABSOLUTE_ERROR等。
+	2.	分类任务通常选择MCXENT、NEGATIVELOGLIKELIHOOD。
+
+**1. MSE[最小平方误差]**
+
+最小平方误差是一个非常常见的损失函数度量，经常用于线性回归中，其中BP算法也经常用到。其公式如下：
+<div align=center>
+<a href="http://www.codecogs.com/eqnedit.php?latex=L[G(X)&space;-&space;Y]&space;=&space;\sum_{i}^{n}[G(x_{i})&space;-&space;y_{i}]^{2}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?L[G(X)&space;-&space;Y]&space;=&space;\sum_{i}^{n}[G(x_{i})&space;-&space;y_{i}]^{2}" title="L[G(X) - Y] = \sum_{i}^{n}[G(x_{i}) - y_{i}]^{2}" /></a></div>
+
+优点:
+	1, 简单有效
+
+缺点：
+	1, 经常应用于回归预测中，而对于分类输出多为概率的情况不适用。
+	2，MSE通常不能用Sigmoid系的激活函数，因为Sigmoid激活函数在图像两端非常平缓，易于出现梯度消失的情况，而MSE函数无法处理梯度消失问题。
+
+**2. MCXENT[交叉熵损失函数]**
+
+交叉熵是一个非常神奇的应用，其目的在于 使用预测分布Q来表示样本的真实分布P的平均编码长度。其公式如下：
+
+<div align=center>
+<a href="http://www.codecogs.com/eqnedit.php?latex=H(P,Q)&space;=&space;H(P)&plus;D(P||Q)&space;=&space;-\sum_{x\subset&space;X}^{X}P(x)log(P(x))&plus;\sum_{x\subset&space;X}^{X}P(x)log\frac{P(x)}{Q(x)}&space;=&space;-\sum_{x\subset&space;X}^{X}P(x)logQ(x)" target="_blank"><img src="http://latex.codecogs.com/gif.latex?CEH(P,Q)&space;=&space;H(P)&plus;D(P||Q)&space;=&space;-\sum_{x\subset&space;X}^{X}P(x)log(P(x))&plus;\sum_{x\subset&space;X}^{X}P(x)log\frac{P(x)}{Q(x)}&space;=&space;-\sum_{x\subset&space;X}^{X}P(x)logQ(x)" title="CEH(P,Q) = H(P)+D(P||Q) = -\sum_{x\subset X}^{X}P(x)log(P(x))+\sum_{x\subset X}^{X}P(x)log\frac{P(x)}{Q(x)} = -\sum_{x\subset X}^{X}P(x)logQ(x)" /></a></div>
+
+其中H(P)代表真实分布P的熵 ==> 衡量一个样本所需的编码长度的期望。D(P||Q)代表KL距离也称之为相对熵 ==> 衡量相同时间空间内两个概率分布的差异。
+
+交叉熵损失函数 是一个非常基本的损失函数，主要用于逻辑回归和softmax分类中。其基本公式(以逻辑回归为例):
+<div align=center>
+<a href="http://www.codecogs.com/eqnedit.php?latex=L(Y,H(X))&space;=&space;-\frac{1}{m}\sum_{i=1}^{m}[y_{i}log(h(x_{i}))&plus;(1-y_{i})log(1-h(x_{i}))]" target="_blank"><img src="http://latex.codecogs.com/gif.latex?L(Y,H(X))&space;=&space;-\frac{1}{m}\sum_{i=1}^{m}[y_{i}log(h(x_{i}))&plus;(1-y_{i})log(1-h(x_{i}))]" title="L(Y,H(X)) = -\frac{1}{m}\sum_{i=1}^{m}[y_{i}log(h(x_{i}))+(1-y_{i})log(1-h(x_{i}))]" /></a></div>
+
+
+
 ## 2, 循环神经网络
 ### 2.1， 循环神经网络简介
 循环神经网络已经在自然语言处理中取得了巨大成功以及广泛的应用。并且循环神经网络中目前使用的最广泛为LSTM(长短时记忆网络)。
