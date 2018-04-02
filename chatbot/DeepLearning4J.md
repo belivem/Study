@@ -137,7 +137,7 @@ Adadelta是对Adagrad的一个扩展，其目的在于采用一阶的方法，�
 sigmod函数一个单调并且相对稳定的函数。其计算公式如下：
 
 <div align=center>
-<a href="http://www.codecogs.com/eqnedit.php?latex=f(x)&space;=&space;\frac{1}{1&plus;e^{-x}}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?f(x)&space;=&space;\frac{1}{1&plus;e^{-x}}" title="f(x) = \frac{1}{1+e^{-x}}" /></a><>/div>
+<a href="http://www.codecogs.com/eqnedit.php?latex=f(x)&space;=&space;\frac{1}{1&plus;e^{-x}}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?f(x)&space;=&space;\frac{1}{1&plus;e^{-x}}" title="f(x) = \frac{1}{1+e^{-x}}" /></a></div>
 
 图形为：
 
@@ -146,15 +146,15 @@ sigmod函数一个单调并且相对稳定的函数。其计算公式如下：
 </div>
 
 优点：
+
 	1， sigmod函数的输出连续且单调递增，并且值域为(0,1),是一个相对稳定的函数，主要用于输出层。
 	2， sigmod函数求导容易。
 缺点：
+
 	1， 属于软饱和函数，容易产生梯度消失。
 	2， 不是关于0点对称。
 
-
 **tanh函数:**
-
 tanh函数公式如下：
 
 <div align=center>
@@ -167,9 +167,11 @@ tanh函数公式如下：
 </div>
 
 优点：
+
 	1， 单调递增，相对于sigmod函数，其收敛速度较快。
 	2， tanh函数关于0点对称。
 缺点：
+
 	1， 由于饱和性产生的梯度消失问题。
 
 **RELU类激活函数:**
@@ -178,33 +180,29 @@ tanh函数公式如下：
 <img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/pWaib0xVAgHqBayGWllXnf41OHscBiZpYWM4nDuaKhw!/b/dFYBAAAAAAAA&bo=PAIYAQAAAAADBwU!&rf=viewer_4" width="400" height="200" alt="RELU"/>
 </div>
 
-
 RELU函数：
-
 RELU函数是近年来较为流行的函数，其公式如下：
 
 <div align=center>
 <img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/lHSu7JCOiaAD5ugjC3RVus6nleWHKmZE8uRKYMCjgb4!/b/dEQBAAAAAAAA&bo=pQBDAAAAAAADF9Q!&rf=viewer_4" width="150" height="70" alt="RELU"/>
 </div>
-
 图形如下:
-	
 <div align=center>
 <img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/s45u97QRyu0cpuO7XBfNckiZ.l8Rp1V1*77dR7sk07g!/b/dFYBAAAAAAAA&bo=XgHMAAAAAAADF6E!&rf=viewer_4" width="400" height="200" alt="RELU"/>
 </div>	
 
 优点：
+
 	1， 相比于sigmod和tanh，RELU能够收敛的更快，因为它是线性并且非饱和的函数，并且计算速度更快。
 	2， 有效的环节了梯度消失的问题。
 缺点：
+
 	1， 随着训练的进行，RELU可能出现神经元死亡的现象，并且流经神经元的梯度将永远是0，不可逆，故而RELU函数经常用于CNN的训练，因为图像的像素点基本上都不为0.
 
-
 ELU函数：
-
-ERU函数被定义为：
-	
+ERU函数被定义为：	
 优点：
+
 	1， 在负的限制条件下能够更有鲁棒性。
 	2， 计算也相对容易，导数与sigmod类似。
 
