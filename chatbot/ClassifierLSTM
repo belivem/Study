@@ -1,0 +1,101 @@
+package com.huawei.algorithm.lab.dlp4j;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+
+import org.deeplearning4j.eval.Evaluation;
+import org.deeplearning4j.nn.api.Layer;
+import org.deeplearning4j.nn.api.OptimizationAlgorithm;
+import org.deeplearning4j.nn.conf.GradientNormalization;
+import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
+import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.Updater;
+import org.deeplearning4j.nn.conf.layers.GravesLSTM;
+import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.deeplearning4j.util.ModelSerializer;
+import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.lossfunctions.LossFunctions;
+
+import com.huawei.algorithm.lab.IOManager.InputUtil;
+
+public class ClassifierLSTM {	 
+	
+	private static final String separator = " ";
+	
+	private static final String input_train_path = "C:\\Users\\l00369684\\Desktop\\Data\\IBM_train_dataset.csv";
+	private static final String input_test_path  = "C:\\Users\\l00369684\\Desktop\\Data\\IBM_test_dataset.csv";
+	private static final String model_save_path  = "C:\\Users\\l00369684\\Desktop\\Data\\Models\\LSTM\\";
+	
+	//build the network
+	public static MultiLayerConfiguration lstmNetConfBuilder(int inputSize,int lstmUnits,int outputSize){				
+		
+        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT).iterations(1)
+                .updater(Updater.RMSPROP)
+                .regularization(true).l2(1e-5)
+                .weightInit(WeightInit.XAVIER)
+                .gradientNormalization(GradientNormalization.ClipElementWiseAbsoluteValue).gradientNormalizationThreshold(1.0)
+                .learningRate(0.002)
+                .list()
+                .layer(0, new GravesLSTM.Builder().nIn(inputSize).nOut(lstmUnits)
+                    .activation(Activation.SOFTSIGN).build())
+                .layer(1, new RnnOutputLayer.Builder().activation(Activation.SOFTMAX)
+                    .lossFunction(LossFunctions.LossFunction.MCXENT).nIn(lstmUnits).nOut(outputSize).build())
+                .pretrain(false).backprop(true).build();
+        
+        return conf;
+	}
+	
+	public static void main(String[] args){
+		// TODO Auto-generated method stub
+		int batchSize      = 100;
+		int lstmLevelUnits = 100;
+		int nEpochs        = 100;
+		
+		InputUtil util = new InputUtil(20,false,separator);
+		Map<String,ArrayList<String>> trainMap = util.getPinYinData(input_train_path, util.getWithTone(), util.getSeparator());
+		Map<String,ArrayList<String>> testMap  = util.getPinYinData(input_test_path,  util.getWithTone(), util.getSeparator());
+		
+		ClassifiTextIterator train_iterator = new ClassifiTextIterator(util.getValidateWord(),trainMap,batchSize,util.getTruncateLength(),util.getSeparator());				
+		ClassifiTextIterator test_iterator  = new ClassifiTextIterator(util.getValidateWord(),testMap,batchSize,util.getTruncateLength(),util.getSeparator());				
+
+		MultiLayerConfiguration conf = lstmNetConfBuilder(util.getValidateCount(),lstmLevelUnits,train_iterator.getLabelCount());
+		MultiLayerNetwork net = new MultiLayerNetwork(conf);
+		net.init();
+		net.setListeners(new ScoreIterationListener(1));
+		
+		//Print the  number of parameters in the network (and for each layer)
+		Layer[] layers = net.getLayers();
+		int totalNumParams = 0;
+		for( int i=0; i<layers.length; i++ ){
+			int nParams = layers[i].numParams();
+			System.out.println("Number of parameters in layer " + i + ": " + nParams);
+			totalNumParams += nParams;
+		}
+		System.out.println("Total number of network parameters: " + totalNumParams);
+		
+		//Begin training
+		for(int i = 0;i < nEpochs;i++){
+			net.fit(train_iterator);
+			train_iterator.reset();
+			
+			System.out.println("Epoch " + i + " complete. Starting evaluation:");
+			Evaluation evaluation = net.evaluate(test_iterator);
+			
+			System.out.println(evaluation.stats());
+		}
+		
+        try {
+			ModelSerializer.writeModel(net, model_save_path+"SMPModel.net", true);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        System.out.println("----- Example complete -----");	
+	}
+
+}
