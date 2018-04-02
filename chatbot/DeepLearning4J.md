@@ -334,6 +334,15 @@ LSTM增加网络层数：
 <img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/p*xUnevwcxF2Afb24JC7EOTriI.n5c7fxVvST6xLG2I!/b/dF4BAAAAAAAA&bo=wgIjAQAAAAADB8A!&rf=viewer_4" width="600" height="300" alt="输出门"/>
 </div>
 
+
+## 3 deeplearning的优化
+
+**梯度：**
+	梯度指的是偏导数的向量：f(xi)的梯度是包含所有xi偏导数的一个向量,向量的第i个元素即是f关于xi的偏导数，多维问题下，临界点即是梯度中所有元素都为0的点。
+
+**优化方式:**
+	仅使用梯度信息的优化算法称之为一阶优化算法，而利用Hessian矩阵的优化算法称之为二阶优化算法。，如牛顿法
+
 # 引用
 [1, 循环神经网络介绍] (http://blog.csdn.net/heyongluoyao8/article/details/48636251)
 [2, RNN & LSTM 网络结构及应用] (https://www.jianshu.com/p/f3bde26febed)
