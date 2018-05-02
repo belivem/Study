@@ -177,4 +177,5 @@ instanceof关键字与isInstance方法具有相同的功能 ==》 意在告诉�
 #引用
 
 [1. 常见内部类] https://blog.csdn.net/qq_33599978/article/details/70880803
-[1. 工厂模式] https://www.jianshu.com/p/bf8341c75304
+[2. 工厂模式] https://www.jianshu.com/p/bf8341c75304
+[3. 深入理解Java类型信息] https://blog.csdn.net/javazejian/article/details/70768369
