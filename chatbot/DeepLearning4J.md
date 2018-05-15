@@ -1,79 +1,19 @@
-#Tensorflow 
+#DeepLearing 
 
-Tensorflow首先要定义神经网络的结构，然后再把数据放入结构当中去运算和training。
+##0, 深度学习相关
 
-## 0, 课外知识
+1, 深度学习解决的核心问题之一就是自动的将简单的特征组合成更加复杂的特征，并且使用这些特征组合解决相关问题。
+2，模拟人类大脑不再是深度学习研究的主导方向，我们此时不应该再认为深度学习是在试图模仿人类大脑。
 
-### 0.1, Tensorflow相关知识
-迁移学习从形象上来看是将多个神经网络进行嵌套？
-
-Tensorflow是Google开发的一款神经网络Python外部的结构包，也是一个采用数据流图来进行数值计算的开源软件库。Tensorflow让我们先绘制计算流程图，让后将其转换为更高效的C++代码在后端进行计算。
-
-### 0.2, numpy包
-
-**numpy.random**
-
-	np.random.rand(3,2) ==>  (0,1)随机值
-	   [[ 0.14022471,  0.96360618],  #random
-       [ 0.37601032,  0.25528411],  #random
-       [ 0.49313049,  0.94909878]]  #random
-	
-	np.random.randn(3,2) ==> 标准正态分布	   
-	   [[-0.38458269 -1.10661104]
- 	   [-2.30134071  1.32268547]
- 	   [-0.7396217   1.3297743 ]]
-
-	np.random.randint(low=1,high=10,size=(2,4))  ==> 返回随机的整数 [low,high)
-	   [[6 7 4 9]
- 	   [8 8 8 6]]
-
-	np.random.sample((2,4)) ==> 返回随机的浮点数,[0.0,1.0) [random(size),ranf(size),sample(size)]
-	   [[ 0.29460568  0.54594477  0.72537726  0.67353527]
- 	   [ 0.50536138  0.87936138  0.3007312   0.94224057]]
-	
-	np.random.shuffle(numpy) ==> 洗牌
-	   arr = np.arange(10)
-       print(arr)
-       np.random.shuffle(arr)
-       print(arr)
-
-	np.random.permutation(10)  ==> 返回一个随机的排列
-		[6 7 8 9 0 2 1 3 4 5]
-
-	
-	
-
-## 1, Tensorflow数据类型
-
-**张量(Tensor)**
-
-张量有多种，其中零阶张量称为标量==》 也就是一个数值，比如[1]；一阶张量为向量，比如一维数组[1,2,3]；二阶张量为矩阵，比如二维的[[1,2,3],[4,5,6]...],以此类推；
-
-**会话控制(Session)**
-
-Session是Tensorflow为了控制的关键语句，运行Session.run(result/option)可以获得你要的运算结果或者是你要运算的部分。
-
-**变量(Variable)**
-
-在 Tensorflow 中，定义了某字符串是变量，它才是变量；在Tensorflow中设定了变量，那么对其进行初始化将是十分重要的；
-
-**占位符(Placeholder)**
-
-Tensorflow中，占位符(tf.placeholder())用于暂时存储变量；占位符往往作用于外部传入data,其传输数据格式如下：sess.run(x,feed_dict={input:x})
-
-
-##2, IO[输入输出]
-
-
-##3, 神经网络基础
+##1, 神经网络基础
 
 机器学习算法的常用优化方式：1>牛顿法。2>梯度下降法。3>最小二乘法等，其中神经网络就隶属于**梯度下降法**这个分支。
 
-###3.1, 优化与激励函数
+###1.1, 优化与激励函数
 
 神经网络有五大超参数，而这些超参数不能通过常规方法获得。其具有的五大超参数如下：1，学习率。2，权值初始化。3，网络层数。4，单层神经单元数。5，正则惩罚项。SVM支持向量机通过巧妙的变换目标函数，避免神经网络的大部分超参数，尤其是自适应的支持向量替代人工设置神经元，使得SVM避免过拟合。
 
-####3.1.1 激活函数
+####1.1.1 激活函数
 
 <div align=center>
 <img src="http://w3.huawei.com/t/data/uploads/miniblog/2018/0506/dc05cf2babeae009e6b468dd4af1fba2_middle.jpg" width="550" height="350" alt="Activate Functions"/>
@@ -157,7 +97,7 @@ ERU函数被定义为：
 	1， 在负的限制条件下能够更有鲁棒性。
 	2， 计算也相对容易，导数与sigmod类似。
 
-####3.1.2 学习率 -- 加速训练过程
+####1.1.2 学习率 -- 加速训练过程
 
 **1. SGD[随机梯度，一阶方法]**
 
@@ -260,17 +200,10 @@ Adadelta是对Adagrad的一个扩展，其目的在于采用一阶的方法，�
 </div>
 
 
-##4, 循环神经网络
+##2, 循环神经网络
 
 
-##5, 卷积神经网络
-
-
-##6, Tensorflow可视化  Tensorboard
-
-Tensorboard用于Tensorflow可视化,其可以将模型训练过程中的各种数据汇总起来存在自定义的路径与日志文件中，然后在指定的web端可视化地展现这些信息。
-
-
+##3, 卷积神经网络
 
 #引用
 
@@ -285,3 +218,5 @@ Tensorboard用于Tensorflow可视化,其可以将模型训练过程中的各种�
 [5, numpy.random] <https://blog.csdn.net/vicdd/article/details/52667709>
 
 [6, Tensorflow的可视化工具Tensorboard的初步使用] <https://blog.csdn.net/sinat_33761963/article/details/62433234>
+
+
