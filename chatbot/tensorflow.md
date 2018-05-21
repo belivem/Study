@@ -18,10 +18,13 @@ Tensorflow框架可以很好地支持深度学习算法，但是其不限于深�
 
 tf.concat([col1,col2],0)  ==> 将张量col1和col2按照axis=0合并为一个新的tensor
 
+张量中并没有真正保存数字，它保存的是如何得到这些数字的计算过程。一个张量中主要保存了三个属性：[名字/shape/类型]
+
 **会话控制(Session)**
 
 Session是Tensorflow为了控制的关键语句，运行Session.run(result/option)可以获得你要的运算结果或者是你要运算的部分。
 
+会话拥有并管理Tensorflow程序运行时的所有资源，当所有计算完成之后需要关闭会话来对资源进行回收，否则可能出现资源泄露的情况。
 **变量(Variable)**
 
 在 Tensorflow 中，定义了某字符串是变量，它才是变量；在Tensorflow中设定了变量，那么对其进行初始化将是十分重要的；
@@ -42,6 +45,24 @@ TensorFlow程序读取数据一共有3种方法:
 [("file%d" % i) for i in range(2)]  / tf.train.match_filenames_once()  ==> filename_list
 tf.train.string_input_producer(filename_list)   ==>  filename_queue
 
+tf.TextLineReader() || tf.decode_csv  ==> 从文本文件读取数据
+tf.FixedLengthRecordReader() || tf.decode_raw  ==> 读取二进制文件
+tf.python_io.TFRecordWriter()    ==> 写入文件 TFRecord
+tf.TFRecordReader() || tf.parse_single_example()  ==> 读取TFRecord文件
+
+tf.train.shuffle_batch()  ==>   输入数据乱序处理
+tf.train.shuffle_batch_join()  ==> 乱序处理升级版，更强的乱序处理[不同文件样本 作为一个batch_size]
+
+threads = tf.train.start_queue_runners(coord=coord) ==> 开始数据读取[因为数据读取为线程，启动输入管道的线程]，需配合使用coord = tf.train.Coordinator() 使得在发生错误的时候正常关闭线程
+
 **初始化**
 init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
+
+
+#3, 常用函数区别
+
+1, tf.multiply和tf.matmul    
+		1> tf.matmul() 为矩阵的乘法 shape[2,3].shape[3,2]  = shape[2,2]
+		2> tf.multiply() 为矩阵中各个数的乘法 shape[2,3].shape[2,3] = shape[2,3]
+
 
