@@ -27,7 +27,12 @@ Session是Tensorflow为了控制的关键语句，运行Session.run(result/optio
 会话拥有并管理Tensorflow程序运行时的所有资源，当所有计算完成之后需要关闭会话来对资源进行回收，否则可能出现资源泄露的情况。
 **变量(Variable)**
 
-在 Tensorflow 中，定义了某字符串是变量，它才是变量；在Tensorflow中设定了变量，那么对其进行初始化将是十分重要的；
+在 Tensorflow 中，变量的作用就是保存和更新神经网络中的参数；在Tensorflow中设定了变量，那么对其进行初始化将是十分重要的；
+
+Tensorflow中，所有的变量都会自动的加入GraphKeys.VARIABLES这个集合，可通过函数tf.global_variables()查看图中所有的变量；tf.trainable_variables()查看神经网络中所有需要优化的参数。
+
+**常数(constant)**
+神经网络中，*偏置项*通常使用常数设置初始值。
 
 **占位符(Placeholder)**
 
@@ -64,5 +69,22 @@ init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
 1, tf.multiply和tf.matmul    
 		1> tf.matmul() 为矩阵的乘法 shape[2,3].shape[3,2]  = shape[2,2]
 		2> tf.multiply() 为矩阵中各个数的乘法 shape[2,3].shape[2,3] = shape[2,3]
+
+2, tensor.eval()： 在一个Seesion里面“评估”tensor的值（其实就是计算），当然首先执行计算值之前的各个必要操作。
+
+3, 分布相关 ==>
+		1> tf.random_normal()  : 正太分布
+		2> tf.truncated_normal() : 正太分布，若随机数偏离，则重新分布 
+		3> tf.random_uniform() : 均匀分布
+		4> tf.random_poisson() : 泊松分布
+		5> tf.random_gamma() : 伽马分布
+
+4，常量声明方法 ==> 
+		1> tf.zeros()  生成全0的数组
+		2> tf.ones()   生成全1的数组
+		3> tf.fill()   生成一个全部为给定数值的数组
+
+	
+
 
 
