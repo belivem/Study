@@ -31,14 +31,16 @@ Session是Tensorflow为了控制的关键语句，运行Session.run(result/optio
 
 Tensorflow中，所有的变量都会自动的加入GraphKeys.VARIABLES这个集合，可通过函数tf.global_variables()查看图中所有的变量；tf.trainable_variables()查看神经网络中所有需要优化的参数。
 
-**常数(constant)**
-神经网络中，*偏置项*通常使用常数设置初始值。
+**常量(constant)**
+神经网络中，*偏置项*通常使用常数设置初始值。Tensorflow中，每生成一个常量，Tensorflow都会在计算图中增加一个节点。
 
 **占位符(Placeholder)**
 
-Tensorflow中，占位符(tf.placeholder())用于暂时存储变量；占位符往往作用于外部传入data,其传输数据格式如下：sess.run(x,feed_dict={input:x})
+Tensorflow中，占位符(tf.placeholder())用于暂时存储变量；占位符往往作用于外部传入data,其传输数据格式如下：sess.run(y,feed_dict={x:value})
 
 placeholder节点被声明的时候是未初始化的， 也不包含数据， 如果没有为它供给数据， 则TensorFlow运算的时候会产生错误。
+
+x = tf.placeholder(dtype=tf.float32,shape=[None,2]) : 使用None可以方便的使用不同的batch
 
 ##2, IO[输入输出]
 TensorFlow程序读取数据一共有3种方法:
@@ -84,7 +86,9 @@ init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
 		2> tf.ones()   生成全1的数组
 		3> tf.fill()   生成一个全部为给定数值的数组
 
-	
+5, 常用Tensor转换方法
+		1> tf.clip_by_value(t,min,max) : 改变Tensor t中值，使得最小为min,最大为max
+
 
 
 

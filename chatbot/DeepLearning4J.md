@@ -9,11 +9,9 @@
 
 机器学习算法的常用优化方式：1>牛顿法。2>梯度下降法。3>最小二乘法等，其中神经网络就隶属于**梯度下降法**这个分支。
 
-###1.1, 优化与激励函数
+###1.1, 激活函数
 
 神经网络有五大超参数，而这些超参数不能通过常规方法获得。其具有的五大超参数如下：1，学习率。2，权值初始化。3，网络层数。4，单层神经单元数。5，正则惩罚项。SVM支持向量机通过巧妙的变换目标函数，避免神经网络的大部分超参数，尤其是自适应的支持向量替代人工设置神经元，使得SVM避免过拟合。
-
-####1.1.1 激活函数
 
 <div align=center>
 <img src="http://w3.huawei.com/t/data/uploads/miniblog/2018/0506/dc05cf2babeae009e6b468dd4af1fba2_middle.jpg" width="550" height="350" alt="Activate Functions"/>
@@ -97,7 +95,7 @@ ERU函数被定义为：
 	1， 在负的限制条件下能够更有鲁棒性。
 	2， 计算也相对容易，导数与sigmod类似。
 
-####1.1.2 学习率 -- 加速训练过程
+###1.2 学习率 -- 加速训练过程
 
 **1. SGD[随机梯度，一阶方法]**
 
@@ -198,6 +196,10 @@ Adadelta是对Adagrad的一个扩展，其目的在于采用一阶的方法，�
 <div align=center>
 <img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/FocderlHxjXwR9KsrXg4rkEDaNaWV3zIgRaikVsDIpg!/b/dEIBAAAAAAAA&bo=SgPZAQAAAAADB7M!&rf=viewer_4" width="800" height="400" alt="updater算法"/>
 </div>
+
+###1.3, 损失函数
+
+**交叉熵损失函数：**
 
 
 ##2, 循环神经网络
