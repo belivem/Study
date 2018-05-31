@@ -2,7 +2,7 @@
 
 Tensorflow是Google开发的一款神经网络Python外部的结构包，也是一个采用数据流图来进行数值计算的开源软件库。Tensorflow让我们先绘制计算流程图，让后将其转换为更高效的C++代码在后端进行计算。Tensorflow首先要定义神经网络的结构，然后再把数据放入结构当中去运算和training。
 
-Tensorflow框架可以很好地支持深度学习算法，但是其不限于深度学习。	
+Tensorflow框架可以很好地支持深度学习算法，但是其不限于深度学习[深度学习重要特征：1，多层。2，非线性]。	
 
 ## 1, Tensorflow数据类型
 
@@ -68,13 +68,15 @@ init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
 
 #3, 常用函数区别
 
-1, tf.multiply和tf.matmul    
+1, tf.multiply和tf.matmul
+    
 		1> tf.matmul() 为矩阵的乘法 shape[2,3].shape[3,2]  = shape[2,2]
 		2> tf.multiply() 为矩阵中各个数的乘法 shape[2,3].shape[2,3] = shape[2,3]
 
 2, tensor.eval()： 在一个Seesion里面“评估”tensor的值（其实就是计算），当然首先执行计算值之前的各个必要操作。
 
 3, 分布相关 ==>
+
 		1> tf.random_normal()  : 正太分布
 		2> tf.truncated_normal() : 正太分布，若随机数偏离，则重新分布 
 		3> tf.random_uniform() : 均匀分布
@@ -82,13 +84,26 @@ init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
 		5> tf.random_gamma() : 伽马分布
 
 4，常量声明方法 ==> 
+
 		1> tf.zeros()  生成全0的数组
 		2> tf.ones()   生成全1的数组
 		3> tf.fill()   生成一个全部为给定数值的数组
 
 5, 常用Tensor转换方法
+
 		1> tf.clip_by_value(t,min,max) : 改变Tensor t中值，使得最小为min,最大为max
 
+6，激活函数相关
 
+		1> tf.sigmoid()
+		2> tf.nn.softmax()
+		3> tf.nn.softmax_cross_entropy_with_logits() ==>softmax函数[直接定义交叉熵损失函数]
+		4> tf.tanh()
+		5> tf.nn.relu()
+		6> tf.nn.crelu()
+		
+		
+7，学习率相关
 
+		1> tf.train.exponential_decay() ==>指数衰减法
 
