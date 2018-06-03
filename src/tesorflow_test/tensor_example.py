@@ -1,17 +1,14 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Nov 21 23:24:36 2017
-
-@author: liyanan
-"""
 
 import tensorflow as tf
 
-a = tf.constant([1.0,2.0],name = "c")
-b = tf.constant([3.0,4.0],dtype=tf.float32,name = "d")
+def test():
+    a = tf.constant([1,2],dtype=tf.float32,shape=[1,2],name="constant")
+    
+    init = (tf.global_variables_initializer(),tf.local_variables_initializer())
+    with tf.Session() as sess:
+        sess.run(init)
+        print(sess.run(a))
+    print("Hello,World!")
 
-result = tf.add(a,b,name="sum")
-
-with tf.Session() as sess:
-    print(sess.run(result))
+if __name__ == "__main__":
+    test()

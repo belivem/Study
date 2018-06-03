@@ -107,3 +107,6 @@ init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
 
 		1> tf.train.exponential_decay() ==>指数衰减法
 
+8, 正则化相关与滑动平均模型
+
+		1> 
