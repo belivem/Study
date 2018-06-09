@@ -65,15 +65,21 @@ threads = tf.train.start_queue_runners(coord=coord) ==> 开始数据读取[因�
 **初始化**
 init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
 
+##3，滑动平均模型和指数衰减法
 
-#3, 常用函数区别
+	滑动平均方法使得模型在测试数据上表现更好，表现的更为强健！
+
+##4, 常用函数区别
 
 1, tf.multiply和tf.matmul
     
 		1> tf.matmul() 为矩阵的乘法 shape[2,3].shape[3,2]  = shape[2,2]
 		2> tf.multiply() 为矩阵中各个数的乘法 shape[2,3].shape[2,3] = shape[2,3]
 
-2, tensor.eval()： 在一个Seesion里面“评估”tensor的值（其实就是计算），当然首先执行计算值之前的各个必要操作。
+2, 数学计算相关
+	
+		1> tensor.eval()： 在一个Seesion里面“评估”tensor的值（其实就是计算），当然首先执行计算值之前的各个必要操作。
+		2> tf.argmax()/tf.argmin(): 得到向量或者矩阵中每行的最大值/最小值所在位置索引，其中对于向量,参数(axis = 0),矩阵(axis = 1)。
 
 3, 分布相关 ==>
 
@@ -107,6 +113,13 @@ init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
 
 		1> tf.train.exponential_decay() ==>指数衰减法
 
-8, 正则化相关与滑动平均模型
-
-		1> 
+8, 损失函数相关
+	**softmax损失函数**
+	
+		1> c1 = tf.nn.softmax_cross_entropy_with_logits(logits=logits,labels=input_y)
+        2> c2 = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits,labels=tf.argmax(input_y,axis=1))
+		注: c1与c2值都为一个向量，而不是一个具体的实数值，若要求得交叉熵那么需要tf.reduce_sum(c1)[向量的各个维度相加]，若要求平均交叉熵损失函数，需要tf.reduce_mean(tf.reduce_sum(c1)),
+			c1和c2函数的区别在于输入参数labels，c1为类别的one_hot表示，而c2为特定的类别(例如，one_hot表示的最大值索引，[0.0,0.0,1.0] ==> 最大索引为2)。其中，logits为神经网络的最后输出，
+			也即softmax函数的输入。
+		3> c3 = tf.nn.sigmoid_cross_entropy_with_logits()
+		4> c4 = tf.nn.weighted_sigmoid_cross_entropy_with_logits()

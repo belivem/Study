@@ -5,9 +5,6 @@
 1, 深度学习解决的核心问题之一就是自动的将简单的特征组合成更加复杂的特征，并且使用这些特征组合解决相关问题。
 2，模拟人类大脑不再是深度学习研究的主导方向，我们此时不应该再认为深度学习是在试图模仿人类大脑。
 3, 深度学习两个重要特征：非线性和多层。
-	**非线性**
-		
-	**多层**
 
 ##1, 神经网络基础
 
@@ -94,6 +91,14 @@ RELU函数是近年来较为流行的函数，其公式如下：
 
 
 **softplus 函数**
+
+**softmax函数**
+
+softmax更多的用于分类，是sigmod的一般化扩展，在tensorflow中也作为一个激活函数使用，往往作为神经网络最后输出的输入(向量[1.2,3.1,0.1])。其公式为:
+
+<a href="http://www.codecogs.com/eqnedit.php?latex=softmax(X)&space;=&space;P(y=j|x)&space;=&space;\frac{e^{w_{j}X}}{\sum_{k=1}^{K}e^{w_{k}X}}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?softmax(X)&space;=&space;P(y=j|x)&space;=&space;\frac{e^{w_{j}X}}{\sum_{k=1}^{K}e^{w_{k}X}}" title="softmax(X) = P(y=j|x) = \frac{e^{w_{j}X}}{\sum_{k=1}^{K}e^{w_{k}X}}" /></a>
+
+输出也为一个向量[0.1,0.2,0.4],取概率最大值的索引即为输入X所对应的输出类别。
 
 ###1.2 学习率 -- 加速训练过程
 
@@ -205,6 +210,15 @@ Adadelta是对Adagrad的一个扩展，其目的在于采用一阶的方法，�
 </div>
 
 ###1.3, 损失函数
+
+常见的损失函数有Zero-one Loss（0-1损失），Perceptron Loss（感知损失），Hinge Loss（Hinge损失），Log Loss（Log损失），Cross Entropy（交叉熵），Square Loss（平方误差），Absolute Loss（绝对误差），Exponential Loss（指数误差)等。
+
+损失函数公式：
+
+<div align=center>
+<a href="http://www.codecogs.com/eqnedit.php?latex=L&space;=&space;\sum_{i=1}^{n}l(y_{i},f(x_{i}))&plus;\lambda&space;R(w)" target="_blank"><img src="http://latex.codecogs.com/gif.latex?L&space;=&space;\sum_{i=1}^{n}l(y_{i},f(x_{i}))&plus;\lambda&space;R(w)" title="L = \sum_{i=1}^{n}l(y_{i},f(x_{i}))+\lambda R(w)" /></a></div>
+
+公式前半部分为经验风险，整体为结构风险，其中R(w)为正则项，常见为L1和L2正则项。
 
 **交叉熵损失函数：**
 
