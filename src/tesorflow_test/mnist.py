@@ -11,9 +11,6 @@ def mnistInfo():
     #read mnist data
     mnist = input_data.read_data_sets("/Users/liyanan/Documents/Test/Tensorflow/src/tesorflow_test/data/mnist_data/",one_hot = True)
 
-    #print current path
-    print("Get the current path ==> "+os.getcwd())
-
     #training data size
     print("Training data size ==> "+str(mnist.train.num_examples))
 
@@ -45,6 +42,23 @@ def getcwd():
     print("Get current working dir ==> "+os.getcwd())
     print("Get current execute file ==> "+sys.argv[0])
 
+def get_class_num():
+    #read mnist data
+    mnist = input_data.read_data_sets("/Users/liyanan/Documents/Test/Tensorflow/src/tesorflow_test/data/mnist_data/",one_hot = True)   
+    
+    labels = tf.placeholder(tf.float32,shape=[None,10],name="labels")
+    class_tensor = tf.argmax(labels,axis=1)
+
+    init = tf.global_variables_initializer()
+    with tf.Session() as sess:
+        sess.run(init)
+        print("class and num ==>")
+        class_def,idx,count = sess.run(tf.unique_with_counts(class_tensor),feed_dict={labels:mnist.train.labels})
+        print(class_def)
+        print(count)
+
+
 if __name__ == "__main__":
     #getcwd()
-    mnistInfo()
+    #mnistInfo()
+    get_class_num()
