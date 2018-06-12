@@ -42,7 +42,7 @@ def getcwd():
     print("Get current working dir ==> "+os.getcwd())
     print("Get current execute file ==> "+sys.argv[0])
 
-def get_class_num():
+def get_minst_class_num():
     #read mnist data
     mnist = input_data.read_data_sets("/Users/liyanan/Documents/Test/Tensorflow/src/tesorflow_test/data/mnist_data/",one_hot = True)   
     
@@ -61,4 +61,4 @@ def get_class_num():
 if __name__ == "__main__":
     #getcwd()
     #mnistInfo()
-    get_class_num()
+    get_minst_class_num()
