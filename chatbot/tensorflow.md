@@ -103,10 +103,9 @@ init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
 
 		1> tf.sigmoid()
 		2> tf.nn.softmax()
-		3> tf.nn.softmax_cross_entropy_with_logits() ==>softmax函数[直接定义交叉熵损失函数]
-		4> tf.tanh()
-		5> tf.nn.relu()
-		6> tf.nn.crelu()
+		3> tf.tanh()
+		4> tf.nn.relu()
+		5> tf.nn.crelu()
 		
 		
 7，学习率相关

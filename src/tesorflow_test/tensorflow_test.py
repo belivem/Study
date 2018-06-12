@@ -1,4 +1,5 @@
 import tensorflow as tf
+import math
 
 def cross_entropy_test():
         
@@ -9,9 +10,9 @@ def cross_entropy_test():
     softmax_y = tf.nn.softmax(logits,name="softmax")
 
     #计算交叉熵
-    corss_entropy1 = -tf.reduce_sum(input_y * tf.log(tf.clip_by_value(softmax_y,1e-10,1.0)))
-    corss_entropy2 = tf.reduce_sum(tf.nn.softmax_cross_entropy_with_logits(logits=logits,labels=input_y))
-    corss_entropy3 = tf.reduce_sum(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits,labels=tf.argmax(input_y,axis=1)))
+    corss_entropy1 = -tf.reduce_sum(input_y * tf.log(tf.clip_by_value(softmax_y,1e-10,1.0)),axis=1)
+    corss_entropy2 = tf.nn.softmax_cross_entropy_with_logits(logits=logits,labels=input_y)
+    corss_entropy3 = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits,labels=tf.argmax(input_y,axis=1))
 
     c1 = tf.nn.softmax_cross_entropy_with_logits(logits=logits,labels=input_y)
     c2 = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits,labels=tf.argmax(input_y,axis=1))

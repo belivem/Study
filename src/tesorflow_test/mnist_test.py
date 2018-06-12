@@ -1,5 +1,6 @@
 import tensorflow as tf
 import mnist
+import neural_util
 
 mnist_path = "/Users/liyanan/Documents/Test/Tensorflow/src/tesorflow_test/data/mnist_data/"
 
@@ -10,33 +11,36 @@ def neural_netword():
     #print the num_examples of training data
     print("Num of training data ==> "+str(mnist_data.train.num_examples))
 
-    training_step = 30000   #训练轮数
+    training_step = 20000   #训练轮数
     batch = 200
-    input_node = 784
-    hidden_node = 500
-    output_node = 10
+    input_size = 784
+    hidden_size = 500
+    output_size = 10
     
     #define input data
-    input_x = tf.placeholder(tf.float32,shape=[None,input_node],name="input_x")
-    input_y = tf.placeholder(tf.float32,shape=[None,output_node],name="input_y")
+    input_x = tf.placeholder(tf.float32,shape=[None,input_size],name="input_x")
+    input_y = tf.placeholder(tf.float32,shape=[None,output_size],name="input_y")
 
     #define parameters
-    weigths1 = tf.Variable(tf.truncated_normal([input_node,hidden_node],tf.float32),name="weights1")
-    weigths2 = tf.Variable(tf.truncated_normal([hidden_node,output_node],tf.float32),name="weights2")
-    biases1 = tf.Variable(tf.fill([hidden_node],0.1),name="biases1")
-    biases2 = tf.Variable(tf.fill([output_node],0.1),name="biases2")
+    weigths1 = tf.Variable(tf.truncated_normal([input_size,hidden_size],dtype=tf.float32),name="weights1")
+    weigths2 = tf.Variable(tf.truncated_normal([hidden_size,output_size],dtype=tf.float32),name="weights2")
+    biases1 = tf.Variable(tf.fill([hidden_size],0.1),dtype=tf.float32,name="biases1")
+    biases2 = tf.Variable(tf.fill([output_size],0.1),dtype=tf.float32,name="biases2")
 
-    #define neural network structure
-    layer1 = tf.nn.relu(tf.matmul(input_x,weigths1)+biases1,name="layer1")
-    layer2 = tf.nn.relu(tf.matmul(layer1,weigths2)+biases2,name="layer2")
-    softmax_y = tf.nn.softmax(layer2,name="softmax")
+    #get the logits layer  ==> softmax_y = tf.nn.softmax(layer2,name="softmax")
+    layer2 = neural_util.get_softmax_logits(input_x,weigths1,weigths2,biases1,biases2,2)
 
-    #define loss function
-    cross_entroy = -tf.reduce_sum(input_y * tf.log(tf.clip_by_value(softmax_y,1e-10,1)))
+    #define loss function  ==> cross_entroy = -tf.reduce_sum(input_y * tf.log(tf.clip_by_value(softmax_y,1e-10,1)),axis=1) 
+    cross_entroy = tf.nn.softmax_cross_entropy_with_logits(logits=layer2,labels=input_y)
     loss = tf.reduce_mean(cross_entroy)
 
     #dfine training process
     train_op = tf.train.GradientDescentOptimizer(learning_rate=0.001).minimize(loss)
+
+    #define the measures
+    layer2_output = neural_util.get_softmax_logits(input_x,weigths1,weigths2,biases1,biases2,2)
+    correct_prediction = tf.equal(tf.argmax(layer2_output,1),tf.argmax(input_y,1))
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction,tf.float32))
 
     init = (tf.global_variables_initializer(),tf.local_variables_initializer())
 
@@ -48,8 +52,40 @@ def neural_netword():
             sess.run(train_op,feed_dict={input_x:batch_x,input_y:batch_y})
 
             if i % 1000 == 0:
-                loss_exoprt = sess.run(loss,feed_dict={input_x:mnist_data.train.images,input_y:mnist_data.train.labels})
-                print("After of "+i+" training, the loss of all_data is "+loss_exoprt)
+                batch_loss_export = sess.run(loss,feed_dict={input_x:batch_x,input_y:batch_y})
+                all_loss_exoprt = sess.run(loss,feed_dict={input_x:mnist_data.train.images,input_y:mnist_data.train.labels})
+                batch_accuracy = sess.run(accuracy,feed_dict={input_x:batch_x,input_y:batch_y})
+                all_accuracy = sess.run(accuracy,feed_dict={input_x:mnist_data.train.images,input_y:mnist_data.train.labels})
+                print("After of "+str(i)+" training, the loss of batch_data is "+str(batch_loss_export)+", and the loass of all_data is "+str(all_loss_exoprt)+  
+                ", the accuracy of batch_data is "+str(batch_accuracy)+", and the accuracy os all_data is "+str(all_accuracy))
+                                
+
+def test():
+    c1 = tf.constant([[1.0,2.0,3.0],[2.0,5.0,1.0],[4.0,2.0,7.0]],dtype=tf.float32,shape=[3,3])
+    c2 = tf.constant([[1.0,2.0,5.0],[2.0,1.0,1.0],[4.0,2.0,7.0]],dtype=tf.float32,shape=[3,3])
+    c3 = tf.constant([[0.0,1.0,0.0],[0.0,1.0,0.0],[1.0,0.0,0.0]],dtype=tf.float32,shape=[3,3])
+
+    c1_max = tf.argmax(c1)
+    c2_max = tf.argmax(c2)
+    equal_tensor = tf.equal(c1_max,c2_max)
+
+    init = tf.global_variables_initializer()
+    with tf.Session() as sess:
+        sess.run(init)
+        print("value ==> ")
+        print(sess.run(equal_tensor))
+        print("c1_max ==> ")
+        print(sess.run(c1_max))
+        print("c2_max ==> ")
+        print(sess.run(c2_max))
+        print("equal_tensor ==> ")
+        print(sess.run(equal_tensor))
+        print("reduce mean ==> ")
+        print(sess.run(tf.reduce_mean(tf.cast(equal_tensor,tf.float32))))        
+        print("sum ==> ")
+        print(sess.run(tf.reduce_sum(c3)))
+
 
 if __name__ == "__main__":
     neural_netword()
+    #test()

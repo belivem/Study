@@ -98,7 +98,12 @@ softmax更多的用于分类，是sigmod的一般化扩展，在tensorflow中也
 
 <a href="http://www.codecogs.com/eqnedit.php?latex=softmax(X)&space;=&space;P(y=j|x)&space;=&space;\frac{e^{w_{j}X}}{\sum_{k=1}^{K}e^{w_{k}X}}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?softmax(X)&space;=&space;P(y=j|x)&space;=&space;\frac{e^{w_{j}X}}{\sum_{k=1}^{K}e^{w_{k}X}}" title="softmax(X) = P(y=j|x) = \frac{e^{w_{j}X}}{\sum_{k=1}^{K}e^{w_{k}X}}" /></a>
 
-输出也为一个向量[0.1,0.2,0.4],取概率最大值的索引即为输入X所对应的输出类别。
+输出也为一个向量[0.1,0.2,0.4],取概率最大值的索引即为输入X所对应的输出类别。Tensorflow最后使用的softmax函数并没有分类器的功能，而仅仅作为一个归一化的工具，其图像为：
+
+<div align=center>
+<img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/ucT9nkH1Tugb8cp2E6a.wDzKLX0c5dQ9HERunTEM6FY!/b/dDIBAAAAAAAA&bo=oAU4BAAAAAABF6k!&rf=viewer_4" width="400" height="350" alt="RELU"/>
+</div>
+
 
 ###1.2 学习率 -- 加速训练过程
 
