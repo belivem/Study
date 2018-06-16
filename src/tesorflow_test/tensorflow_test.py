@@ -69,5 +69,44 @@ def movingAverage_test():
         print(sess.run([v1,ema.average(v1)]))
 
 
+def test_confusion_matrix():
+
+    predict = tf.constant([0,1,0,1,2,3,2,3],dtype=tf.int32,name="predict")
+    labels  = tf.constant([0,1,2,0,2,1,2,3],dtype=tf.int32,name="labels")
+
+    confusion_matrix = tf.confusion_matrix(labels,predict,num_classes=4)
+    
+    correct_predict = tf.diag_part(confusion_matrix)
+    #compute accuracy   
+    colum_sum = tf.reduce_sum(confusion_matrix,axis=0)
+    accuracy = tf.truediv(correct_predict,colum_sum)
+    total_accuracy = tf.reduce_mean(accuracy)
+
+    #compute recall
+    row_sum = tf.reduce_sum(confusion_matrix,axis=1)
+    recall = tf.truediv(correct_predict,row_sum)
+    total_recall = tf.reduce_mean(recall)
+
+    #compute f1
+    
+
+    init = tf.global_variables_initializer()
+    with tf.Session() as sess:
+        sess.run(init)
+        print(predict.eval())
+        print(sess.run(confusion_matrix))
+        print("correct_predict ==> ")
+        print(sess.run(correct_predict))
+        print("colum_sum ==> ")
+        print(sess.run(colum_sum))
+        print("row_sum ==> ")
+        print(sess.run(row_sum))
+        print("accuracy ==> ")
+        print(accuracy.eval())
+        print(sess.run(total_accuracy))
+        print("recall ==> ")
+        print(recall.eval())
+        print(sess.run(total_recall))
+
 if __name__ == "__main__":
-    cross_entropy_test()
+    test_confusion_matrix()

@@ -60,32 +60,6 @@ def neural_netword():
                 ", the accuracy of batch_data is "+str(batch_accuracy)+", and the accuracy os all_data is "+str(all_accuracy))
                                 
 
-def test():
-    c1 = tf.constant([[1.0,2.0,3.0],[2.0,5.0,1.0],[4.0,2.0,7.0]],dtype=tf.float32,shape=[3,3])
-    c2 = tf.constant([[1.0,2.0,5.0],[2.0,1.0,1.0],[4.0,2.0,7.0]],dtype=tf.float32,shape=[3,3])
-    c3 = tf.constant([[0.0,1.0,0.0],[0.0,1.0,0.0],[1.0,0.0,0.0]],dtype=tf.float32,shape=[3,3])
-
-    c1_max = tf.argmax(c1)
-    c2_max = tf.argmax(c2)
-    equal_tensor = tf.equal(c1_max,c2_max)
-
-    init = tf.global_variables_initializer()
-    with tf.Session() as sess:
-        sess.run(init)
-        print("value ==> ")
-        print(sess.run(equal_tensor))
-        print("c1_max ==> ")
-        print(sess.run(c1_max))
-        print("c2_max ==> ")
-        print(sess.run(c2_max))
-        print("equal_tensor ==> ")
-        print(sess.run(equal_tensor))
-        print("reduce mean ==> ")
-        print(sess.run(tf.reduce_mean(tf.cast(equal_tensor,tf.float32))))        
-        print("sum ==> ")
-        print(sess.run(tf.reduce_sum(c3)))
-
 
 if __name__ == "__main__":
     neural_netword()
-    #test()

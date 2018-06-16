@@ -10,3 +10,7 @@ def get_softmax_logits(input_x,weigths1,weigths2,biases1,biases2,level):
     layer1 = tf.nn.relu(tf.matmul(input_x,weigths1)+biases1)
     layer2 = tf.matmul(layer1,weigths2)+biases2
     return layer2
+
+
+    def getMeasures(actual_labels,predict_labels):
+        pass

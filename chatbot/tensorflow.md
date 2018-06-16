@@ -80,6 +80,7 @@ init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
 	
 		1> tensor.eval()： 在一个Seesion里面“评估”tensor的值（其实就是计算），当然首先执行计算值之前的各个必要操作。
 		2> tf.argmax()/tf.argmin(): 得到向量或者矩阵中每行的最大值/最小值所在位置索引，其中对于向量,参数(axis = 0),矩阵(axis = 1)。
+		3> tf.diag_part(): 返回矩阵的对角线元素
 
 3, 分布相关 ==>
 
@@ -122,3 +123,9 @@ init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
 			也即softmax函数的输入。
 		3> c3 = tf.nn.sigmoid_cross_entropy_with_logits()
 		4> c4 = tf.nn.weighted_sigmoid_cross_entropy_with_logits()
+
+9, 控制相关函数
+
+		1> tf.cond(pred,fn1,fn2,name="")   <==>  res = fn1() if pred else fn2() 
+		2> tf.case(pred_fn_pairs, default, exclusive=False, name=’case’)  ==> 更强大的tf.cond
+		3> tf.group() 创建一个包含几个操作的op节点
