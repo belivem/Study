@@ -65,11 +65,8 @@ threads = tf.train.start_queue_runners(coord=coord) ==> 开始数据读取[因�
 **初始化**
 init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
 
-##3，滑动平均模型和指数衰减法
 
-	滑动平均方法使得模型在测试数据上表现更好，表现的更为强健！
-
-##4, 常用函数区别
+##3, 常用函数区别
 
 1, tf.multiply和tf.matmul
     
@@ -109,11 +106,12 @@ init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
 		5> tf.nn.crelu()
 		
 		
-7，学习率相关
+7，
 
-		1> tf.train.exponential_decay() ==>指数衰减法
+		1> 
 
 8, 损失函数相关
+
 	**softmax损失函数**
 	
 		1> c1 = tf.nn.softmax_cross_entropy_with_logits(logits=logits,labels=input_y)
@@ -123,6 +121,36 @@ init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
 			也即softmax函数的输入。
 		3> c3 = tf.nn.sigmoid_cross_entropy_with_logits()
 		4> c4 = tf.nn.weighted_sigmoid_cross_entropy_with_logits()
+	
+	**l1,l2正则化**
+
+		1> tf.keras.regularizers.l1(l=0.01)  ==> l1正则化
+		2> tf.keras.regularizers.l2(l=0.01)  ==> l2正则化
+	
+	**学习率相关**
+
+		1> tf.train.exponential_decay(learning_rate,global_step,decay_steps,decay_rate,staircase=true/false) ==>指数衰减法 非常有用，目的训练起始较大学习率，随着训练轮次进行，学习率变小。
+			公式如下：decayed_learning_rate = learning_rate * decay_rate ^ (global_step / decay_steps)
+			learning_rate :  起始学习率
+			global_step   :  训练第几个轮次，从0起始依次增大
+			decay_steps   :  衰减轮数
+			decay_rate    :  衰减稀疏 0.99,0.98等
+			staircase     :  是否采用阶梯型，采用阶梯型则指每经过100轮其学习率才变化
+	
+	**滑动平均模型**
+		作为一个优化方案==>滑动平均值往往在测试集上表现更好，也更加健壮。为每个变量[weights and biases]维护一个影子变量,预测的时候采用影子变量，公式见下图
+		1> ema = tf.train.ExponentialMovingAverage(decay=0.99,num_updates=global_steps); moving_average_op = ema.apply(tf.trainable_variables());
+			1 训练阶段：为每个可训练的权重维护影子变量，并随着迭代的进行更新；
+			2 预测阶段：使用影子变量替代真实变量值，进行预测。
+
+	**l2泛化**
+		
+		1> tf.nn.l2_normalize()   ==> L2泛化  公式如下:
+
+<div align=center>
+<a href="https://www.codecogs.com/eqnedit.php?latex=norm_{l2}[x_{1},x_{2},x_{3}]&space;=&space;\frac{[x_{1},x_{2},x_{3}]}{\sqrt{{x_{1}}^{2}&plus;x_{2}^{2}&plus;x_{3}^{2}}}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?norm_{l2}[x_{1},x_{2},x_{3}]&space;=&space;\frac{[x_{1},x_{2},x_{3}]}{\sqrt{{x_{1}}^{2}&plus;x_{2}^{2}&plus;x_{3}^{2}}}" title="norm_{l2}[x_{1},x_{2},x_{3}] = \frac{[x_{1},x_{2},x_{3}]}{\sqrt{{x_{1}}^{2}+x_{2}^{2}+x_{3}^{2}}}" /></a></div>
+
+
 
 9, 控制相关函数
 
