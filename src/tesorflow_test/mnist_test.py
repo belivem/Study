@@ -10,15 +10,15 @@ def fully_connected_netword():
     #print the num_examples of training data
     print("Num of training data ==> "+str(mnist_data.train.num_examples))
 
-    training_step = 20000   #训练轮数
-    batch = 200
-    input_size = 784
-    hidden_size = 500
-    output_size = 10
-    regularization_rate = 0.0001
-    learning_rate_base = 0.8
-    learning_rate_decay = 0.99
-    moving_average_decay = 0.99
+    training_step = 20000           #训练轮数
+    batch = 200                     #batch值
+    input_size = 784                #输入层节点个数
+    hidden_size = 500               #隐藏层节点个数
+    output_size = 10                #输出层节点个数
+    regularization_rate = 0.0001    #l2正则化参数
+    learning_rate_base = 0.8        #学习率初始值
+    learning_rate_decay = 0.99      #学习率衰减率
+    moving_average_decay = 0.99     #滑动平均模型衰减率
 
     #define input data
     input_x = tf.placeholder(tf.float32,shape=[None,input_size],name="input_x")
