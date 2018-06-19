@@ -3,19 +3,20 @@ import mnist
 import neural_util
 
 mnist_path = "/Users/liyanan/Documents/Test/Tensorflow/src/tesorflow_test/data/mnist_data/"
+mnist_fully_connected_persistence_path = "/Users/liyanan/Documents/Test/Tensorflow/models/model_pb/model_minst/mnist_fully_connected_model.pb"
 
-def fully_connected_netword():
+def fully_connected_networt():
 
     mnist_data = mnist.getmnist(mnist_path)
     #print the num_examples of training data
     print("Num of training data ==> "+str(mnist_data.train.num_examples))
 
-    training_step = 20000           #训练轮数
+    training_step = 25000           #训练轮数
     batch = 200                     #batch值
     input_size = 784                #输入层节点个数
     hidden_size = 500               #隐藏层节点个数
     output_size = 10                #输出层节点个数
-    regularization_rate = 0.0001    #l2正则化参数
+    regularization_rate = 0.001    #l2正则化参数
     learning_rate_base = 0.8        #学习率初始值
     learning_rate_decay = 0.99      #学习率衰减率
     moving_average_decay = 0.99     #滑动平均模型衰减率
@@ -35,9 +36,8 @@ def fully_connected_netword():
 
     #define loss function  ==> cross_entroy = -tf.reduce_sum(input_y * tf.log(tf.clip_by_value(softmax_y,1e-10,1)),axis=1) 
     cross_entroy = tf.nn.softmax_cross_entropy_with_logits(logits=layer2,labels=input_y)
-    l2_regularizer = tf.contrib.layers.l2_regularizer(regularization_rate)(weigths1)+tf.contrib.layers.l2_regularizer(regularization_rate)(weigths2)
+    l2_regularizer = tf.contrib.layers.l2_regularizer(regularization_rate)(weigths1) + tf.contrib.layers.l2_regularizer(regularization_rate)(weigths2)
     loss = tf.reduce_mean(cross_entroy)+l2_regularizer
-    
 
     #dfine training process ,set decay learning_rate[指数衰减法] and moving_average[滑动平均模型]
     #set decay learning rate
@@ -82,7 +82,26 @@ def fully_connected_netword():
                 print("After of "+str(i)+" training, the loss of batch_data is "+str(batch_loss_export)+", and the loass of all_data is "+str(all_loss_exoprt)+  
                     ", precision is "+str(measures[0])+", recall is "+str(measures[1])+", f1 is "+str(measures[2])+", mean_precision is "+str(measures[3])+", mean_recall is "
                     +str(measures[4])+", mean_f1 is "+str(measures[5]))                    
+        
+        #Persist fully connected network for mnist
+        print("Persist fully connected ==> ")
+        graph_def = tf.get_default_graph().as_graph_def()  #Get the current graph's GraphDef
+        output_graph_def = tf.graph_util.convert_variables_to_constants(sess,graph_def,output_node_names=['add_1'])
+        with tf.gfile.GFile(mnist_fully_connected_persistence_path,mode="wb") as f:
+            f.write(output_graph_def.SerializeToString())
+        print("persistence is done!")
 
+
+def load_mnist_fully_connected_netword():
+    model_file_path = "/Users/liyanan/Documents/Test/Tensorflow/models/model_pb/model_minst/mnist_fully_connected_model.pb"
+
+    with tf.Session() as sess:
+        #load the pb model
+        with tf.gfile.GFile(model_file_path,"rb") as f:
+            graph_def = tf.GraphDef()
+            graph_def.ParseFromString(f.read())
+
+        default_graph = tf.import_graph_def(graph_def)
 
 if __name__ == "__main__":
-    fully_connected_netword()
+    fully_connected_networt()

@@ -62,11 +62,19 @@ tf.train.shuffle_batch_join()  ==> 乱序处理升级版，更强的乱序处理
 
 threads = tf.train.start_queue_runners(coord=coord) ==> 开始数据读取[因为数据读取为线程，启动输入管道的线程]，需配合使用coord = tf.train.Coordinator() 使得在发生错误的时候正常关闭线程
 
-**初始化**
-init = (tf.global_variables_initializer(),tf.local_variables_initializer())?
+##3, 模型的持久化
+
+模型持久化指将训练后的模型持久化至硬盘中，使得我们后续可以继续使用已训练好的模型。Tensorflow中模型持久化保存文件类型为"CKPT"格式。
+
+**保存为CKPT格式**
 
 
-##3, 常用函数区别
+
+**保存为PB格式**
+
+
+
+##4, 常用函数
 
 1, tf.multiply和tf.matmul
     

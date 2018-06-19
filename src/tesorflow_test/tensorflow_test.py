@@ -108,5 +108,31 @@ def test_confusion_matrix():
         print(recall.eval())
         print(sess.run(total_recall))
 
+
+def persistence_test():
+    
+    ckpt_dir = "/Users/liyanan/Documents/Test/Tensorflow/models/model_ckpt/model_test/model.ckpt"
+    
+    v1 = tf.Variable(tf.constant(1.0,dtype=tf.float32,shape=[1]),name="v1")
+    v2 = tf.Variable(tf.constant(2.0,dtype=tf.float32,shape=[1]),name="v2")
+
+    result = tf.add(v1,v2,name="result")
+    init = tf.global_variables_initializer()
+    
+    saver = tf.train.Saver()
+
+    with tf.Session() as sess:
+        sess.run(init)
+        saver.save(sess,ckpt_dir)
+        print(sess.run(result))
+
+def restore_test():
+    ckpt_dir = "/Users/liyanan/Documents/Test/Tensorflow/models/model_ckpt/model_test/model.ckpt"
+    ckpt_file = "/Users/liyanan/Documents/Test/Tensorflow/models/model_ckpt/model_test/model.ckpt.meta"
+    saver = tf.train.import_meta_graph(ckpt_file)
+    with tf.Session() as sess:
+        saver.restore(sess,ckpt_dir)
+
+
 if __name__ == "__main__":
-    test_confusion_matrix()
+    restore_test()
