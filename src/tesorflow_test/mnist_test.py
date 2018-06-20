@@ -92,16 +92,34 @@ def fully_connected_networt():
         print("persistence is done!")
 
 
-def load_mnist_fully_connected_netword():
-    model_file_path = "/Users/liyanan/Documents/Test/Tensorflow/models/model_pb/model_minst/mnist_fully_connected_model.pb"
+#load the fully connected network
+def load_mnist_fully_connected_network():
 
+    output_size = 10;
+    mnist_data = mnist.getmnist(mnist_path)
+
+    graph = neural_util.load_pb_graph(mnist_fully_connected_persistence_path)
+    if graph == None:
+        print("load PB model has error!")
+        return
+
+    #for op in graph.get_operations():
+    #    print(op.name,op.values())
+
+    #input tensor and output tensor
+    input_x = graph.get_tensor_by_name("importPB/input_x:0")
+    input_y = tf.placeholder(tf.float32,shape=[None,output_size],name="input_y")
+
+    output_y = graph.get_tensor_by_name("importPB/add_1:0")
+    
+    actual_labels = tf.argmax(input_y,1)
+    predict_labels = tf.argmax(output_y,1)
+    (precision,recall,f1,mean_precision,mean_recall,mean_f1) = neural_util.getMeasures(actual_labels,predict_labels,output_size)
+    
     with tf.Session() as sess:
-        #load the pb model
-        with tf.gfile.GFile(model_file_path,"rb") as f:
-            graph_def = tf.GraphDef()
-            graph_def.ParseFromString(f.read())
-
-        default_graph = tf.import_graph_def(graph_def)
+        measures = sess.run((precision,recall,f1,mean_precision,mean_recall,mean_f1),feed_dict={input_x:mnist_data.test.images,input_y:mnist_data.test.labels})        
+        print("precision is "+str(measures[0])+", recall is "+str(measures[1])+", f1 is "+str(measures[2])+", mean_precision is "+str(measures[3])+", mean_recall is "
+                    +str(measures[4])+", mean_f1 is "+str(measures[5]))  
 
 if __name__ == "__main__":
-    fully_connected_networt()
+    load_mnist_fully_connected_network()
