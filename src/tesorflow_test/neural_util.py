@@ -12,9 +12,9 @@ def get_softmax_logits(input_x,weigths1,weigths2,biases1,biases2,level):
     return layer2
 
 #Get the precision,recall,f1,mean_precision,mean_recall,mean_f1
-def getMeasures(actual_labels,predict_labels):
+def getMeasures(actual_labels,predict_labels,class_num):
     
-    confusion_matrix = tf.confusion_matrix(actual_labels,predict_labels,num_classes=10)
+    confusion_matrix = tf.confusion_matrix(actual_labels,predict_labels,num_classes=class_num)
     correct_predict = tf.diag_part(confusion_matrix)
     
     #precision

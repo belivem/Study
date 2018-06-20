@@ -4,6 +4,7 @@ import neural_util
 
 mnist_path = "/Users/liyanan/Documents/Test/Tensorflow/src/tesorflow_test/data/mnist_data/"
 mnist_fully_connected_persistence_path = "/Users/liyanan/Documents/Test/Tensorflow/models/model_pb/model_minst/mnist_fully_connected_model.pb"
+mnist_fully_connected_persistence_path_with_average = "/Users/liyanan/Documents/Test/Tensorflow/models/model_ckpt/model_minst/mnist_fully_connected_model.ckpt"
 
 def fully_connected_networt():
 
@@ -58,8 +59,9 @@ def fully_connected_networt():
     #accuracy = tf.reduce_mean(tf.cast(correct_prediction,tf.float32))
     actual_labels = tf.argmax(input_y,1)
     predict_labels = tf.argmax(neural_util.get_softmax_logits(input_x,weigths1,weigths2,biases1,biases2,2),1)
-    (precision,recall,f1,mean_precision,mean_recall,mean_f1) = neural_util.getMeasures(actual_labels,predict_labels)
+    (precision,recall,f1,mean_precision,mean_recall,mean_f1) = neural_util.getMeasures(actual_labels,predict_labels,output_size)
 
+    saver = tf.train.Saver()
     init = (tf.global_variables_initializer(),tf.local_variables_initializer())
 
     with tf.Session() as sess:
@@ -83,19 +85,24 @@ def fully_connected_networt():
                     ", precision is "+str(measures[0])+", recall is "+str(measures[1])+", f1 is "+str(measures[2])+", mean_precision is "+str(measures[3])+", mean_recall is "
                     +str(measures[4])+", mean_f1 is "+str(measures[5]))                    
         
-        #Persist fully connected network for mnist
-        print("Persist fully connected ==> ")
+        #Persist PB model for mnist
+        print("Persistence PB model start ==> ")
         graph_def = tf.get_default_graph().as_graph_def()  #Get the current graph's GraphDef
         output_graph_def = tf.graph_util.convert_variables_to_constants(sess,graph_def,output_node_names=['add_1'])
         with tf.gfile.GFile(mnist_fully_connected_persistence_path,mode="wb") as f:
             f.write(output_graph_def.SerializeToString())
-        print("persistence is done!")
+        print("Persistence PB model is done!")
+
+        #Persist ckpt model for mnist
+        print("Persistence ckpt model start ==> ")
+        saver.save(sess,mnist_fully_connected_persistence_path_with_average)
+        print("Persistence ckpt model is done!")
 
 
 #load the fully connected network
 def load_mnist_fully_connected_network():
 
-    output_size = 10;
+    output_size = 10
     mnist_data = mnist.getmnist(mnist_path)
 
     graph = neural_util.load_pb_graph(mnist_fully_connected_persistence_path)
@@ -121,5 +128,17 @@ def load_mnist_fully_connected_network():
         print("precision is "+str(measures[0])+", recall is "+str(measures[1])+", f1 is "+str(measures[2])+", mean_precision is "+str(measures[3])+", mean_recall is "
                     +str(measures[4])+", mean_f1 is "+str(measures[5]))  
 
+def load_mnist_fully_connected_network_with_average():
+    neural_network_model_path = "/Users/liyanan/Documents/Test/Tensorflow/models/model_ckpt/model_minst/mnist_fully_connected_model.ckpt.meta"
+    saver = tf.train.import_meta_graph(neural_network_model_path)
+    
+    for op in tf.get_default_graph().get_operations():
+        print(op.name,op.values())
+    
+    with tf.Session() as sess:
+        saver.restore(sess,mnist_fully_connected_persistence_path_with_average)
+
+        
+
 if __name__ == "__main__":
-    load_mnist_fully_connected_network()
+    load_mnist_fully_connected_network_with_average()
