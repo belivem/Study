@@ -48,6 +48,10 @@ def fully_connected_networt():
     #set moving average
     ema = tf.train.ExponentialMovingAverage(decay=moving_average_decay,num_updates=global_steps)
     moving_average_op = ema.apply(tf.trainable_variables())
+    
+    print("print variable name ==> ")
+    for v in tf.global_variables():
+        print(v.name)
 
     #set train operation
     train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss,global_step=global_steps)
@@ -100,7 +104,7 @@ def fully_connected_networt():
 
 
 #load the fully connected network
-def load_mnist_fully_connected_network():
+def load_mnist_fully_connected_network_from_pb():
 
     output_size = 10
     mnist_data = mnist.getmnist(mnist_path)
@@ -126,19 +130,40 @@ def load_mnist_fully_connected_network():
     with tf.Session() as sess:
         measures = sess.run((precision,recall,f1,mean_precision,mean_recall,mean_f1),feed_dict={input_x:mnist_data.test.images,input_y:mnist_data.test.labels})        
         print("precision is "+str(measures[0])+", recall is "+str(measures[1])+", f1 is "+str(measures[2])+", mean_precision is "+str(measures[3])+", mean_recall is "
-                    +str(measures[4])+", mean_f1 is "+str(measures[5]))  
+                    +str(measures[4])+", mean_f1 is "+str(measures[5]))
 
-def load_mnist_fully_connected_network_with_average():
-    neural_network_model_path = "/Users/liyanan/Documents/Test/Tensorflow/models/model_ckpt/model_minst/mnist_fully_connected_model.ckpt.meta"
-    saver = tf.train.import_meta_graph(neural_network_model_path)
-    
-    for op in tf.get_default_graph().get_operations():
-        print(op.name,op.values())
-    
+
+
+def load_mnist_fully_connected_network_from_ckpt():
+
+    mnist_data = mnist.getmnist(mnist_path)
+    #define input data
+    input_x = tf.placeholder(tf.float32,shape=[None,784],name="input_x")
+    input_y = tf.placeholder(tf.float32,shape=[None,10],name="input_y")
+
+    weights1_average = tf.Variable(tf.truncated_normal([784,500],dtype=tf.float32),name="weights1_average")
+    weights2_average = tf.Variable(tf.truncated_normal([500,10],dtype=tf.float32),name="weights2_average")
+    bias1_average = tf.Variable(tf.fill([500],0.1),dtype=tf.float32,name="biases1_average")
+    bias2_average = tf.Variable(tf.fill([10],0.1),dtype=tf.float32,name="biases2_average")
+
+    saver = tf.train.Saver({"weights1/ExponentialMovingAverage": weights1_average,
+                            "weights2/ExponentialMovingAverage": weights2_average,
+                            "biases1/ExponentialMovingAverage": bias1_average,
+                            "biases2/ExponentialMovingAverage": bias2_average})
+
+    predict_y = neural_util.get_softmax_logits(input_x,weights1_average,weights2_average,bias1_average,bias2_average,2)
+
+    actual_labels = tf.argmax(input_y,1)
+    predict_labels = tf.argmax(predict_y,1)
+    (precision,recall,f1,mean_precision,mean_recall,mean_f1) = neural_util.getMeasures(actual_labels,predict_labels,10)
+
     with tf.Session() as sess:
         saver.restore(sess,mnist_fully_connected_persistence_path_with_average)
+        measures = sess.run((precision,recall,f1,mean_precision,mean_recall,mean_f1),feed_dict={input_x:mnist_data.test.images,input_y:mnist_data.test.labels})  
+        print("precision is "+str(measures[0])+", recall is "+str(measures[1])+", f1 is "+str(measures[2])+", mean_precision is "+str(measures[3])+", mean_recall is "
+                    +str(measures[4])+", mean_f1 is "+str(measures[5]))         
 
-        
+
 
 if __name__ == "__main__":
-    load_mnist_fully_connected_network_with_average()
+    load_mnist_fully_connected_network_from_ckpt()
