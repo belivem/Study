@@ -121,13 +121,6 @@ sgd为每一次迭代计算一次梯度，然后再对梯度进行更新，是�
 		2. 对所有的参数使用同一个learning rate,比如对于不常见的特征或者稀疏的特征可能想更新快一点，减少时间，就可以设置较大的learning rate.
 		3. sgd算法容易局部最优，这就需要多次设置参数的初始值。
 		4. sgd算法的更新方向完全依赖于当前的batch，使得其十分不稳定。
-
-###1.3 正则化
-
-**L1正则化**
-	L1正则化使得参数变得更为稀疏，会有更多的参数变为0，从而达到类似特征选取的功能，但是L1正则化求导艰难
-**L2正则化**
-	L2正则化有利于求导
 	
 **2. 牛顿法[二阶方法]**
 
@@ -146,7 +139,7 @@ sgd为每一次迭代计算一次梯度，然后再对梯度进行更新，是�
 
 **3. 动量法**
 
-为解决sgd算法缺陷4，引入一个动量，也就成为了动量法。其模拟的是物体运动的惯性 ==> 更新时在一定程度上保留了之前更新的方向，同时利用当前的梯度微调最终的更新方向。如此可在一定程度上增加稳定性，也有利于摆脱局部最小值的影响。其公式如下：
+为解决sgd算法缺陷4，引入一个动量，也就成为了动量法[类似于滑动平均模型，不一致的在于滑动平均模型主要用于偏置值和权重参数]。其模拟的是物体运动的惯性 ==> 更新时在一定程度上保留了之前更新的方向，同时利用当前的梯度微调最终的更新方向。如此可在一定程度上增加稳定性，也有利于摆脱局部最小值的影响。其公式如下：
 
 <div align=center>
 <a href="http://www.codecogs.com/eqnedit.php?latex=X_{t&plus;1}&space;=&space;X_{t}&plus;\Delta&space;X_{t}&space;;&space;\Delta&space;X_{t}&space;=&space;\rho&space;\Delta&space;X_{t&space;-&space;1}-\eta&space;g_{t}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?X_{t&plus;1}&space;=&space;X_{t}&plus;\Delta&space;X_{t}&space;;&space;\Delta&space;X_{t}&space;=&space;\rho&space;\Delta&space;X_{t&space;-&space;1}-\eta&space;g_{t}" title="X_{t+1} = X_{t}+\Delta X_{t} ; \Delta X_{t} = \rho \Delta X_{t - 1}-\eta g_{t}" /></a></div>
@@ -215,6 +208,11 @@ Adadelta是对Adagrad的一个扩展，其目的在于采用一阶的方法，�
 </div>
 
 ###1.3, 损失函数
+
+**L1正则化**
+	L1正则化使得参数变得更为稀疏，会有更多的参数变为0，从而达到类似特征选取的功能，但是L1正则化求导艰难
+**L2正则化**
+	L2正则化有利于求导
 
 常见的损失函数有Zero-one Loss（0-1损失），Perceptron Loss（感知损失），Hinge Loss（Hinge损失），Log Loss（Log损失），Cross Entropy（交叉熵），Square Loss（平方误差），Absolute Loss（绝对误差），Exponential Loss（指数误差)等。
 

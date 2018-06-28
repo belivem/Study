@@ -2,7 +2,7 @@ import tensorflow as tf
 import mnist
 import neural_util
 
-mnist_path = "/Users/liyanan/Documents/Test/Tensorflow/src/tesorflow_test/data/mnist_data/"
+mnist_path = "/Users/liyanan/Documents/Test/Tensorflow/data/mnist_data/"
 mnist_fully_connected_persistence_path = "/Users/liyanan/Documents/Test/Tensorflow/models/model_pb/model_minst/mnist_fully_connected_model.pb"
 mnist_fully_connected_persistence_path_with_average = "/Users/liyanan/Documents/Test/Tensorflow/models/model_ckpt/model_minst/mnist_fully_connected_model.ckpt"
 

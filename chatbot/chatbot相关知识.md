@@ -105,13 +105,13 @@ P代表样本的真实分布，Q代表样本的一个错误分布，则信息熵
 <a href="http://www.codecogs.com/eqnedit.php?latex=H(X,Y)&space;=&space;-\sum_{x\subset&space;X}^{nx}\sum_{y\subset&space;Y}^{ny}p(x,y)logp(x,y)" target="_blank"><img src="http://latex.codecogs.com/gif.latex?H(X,Y)&space;=&space;-\sum_{x\subset&space;X}^{nx}\sum_{y\subset&space;Y}^{ny}p(x,y)logp(x,y)" title="H(X,Y) = -\sum_{x\subset X}^{nx}\sum_{y\subset Y}^{ny}p(x,y)logp(x,y)" /></a></div>
 
 
-#### 2.4，最大熵
+#### 2.6 最大熵
 
 熵是随机变量不确定性的度量，不确定性越大、熵值也就越大。当随机变量退化为一个定值时，其熵也为0.均匀分布为 最不确定 的分布，也即熵最大的分布。
 
 最大熵模型是统计学的一般原理，是概率模型学习的一个准则。最大熵原理认为，学习概率模型时，在所有可能的概率模型中，熵最大的模型是一种最好的模型 ==》 也即在已知的条件下，寻找熵最大--也即不人为增加已有的知识，不确定性最大。最大熵模型根据最大熵原理在一定的特征限制下选择最优的 概率分布。
 
-### 3， 分布
+### 3 分布
 #### 3.1 吉布斯分布
 
 
@@ -123,7 +123,7 @@ NLP中统计模型是指完全利用先验知识统计得到参数模型，常�
 <div align=center>
 <a href="http://www.codecogs.com/eqnedit.php?latex=tf_{i,j}&space;=&space;\frac{n_{i,j}}{\sum&space;_{k}n_{k,j}}" target="_blank"><img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/D1IJ.y3PNkYtxy*r8lEMyHPx00xcz1jJYyq*MaVTNOI!/b/dGUBAAAAAAAA&bo=UQJ3AAAAAAADFxY!&rf=viewer_4" /></a></div>
 
-如图，噪声信道模型的作用在于--依据输出(带噪声)O，找到最大概率的输出I。公式定义如下：
+如图，噪声信道模型的作用在于--依据输入(带噪声)O，找到最大概率的输出I。公式定义如下：
 <div align=center>
 <a href="http://www.codecogs.com/eqnedit.php?latex=I&space;=&space;argmax(P(I/O))&space;=&space;argmax(\frac{P(I)*P(O/I)}{P(O)})=argmax(P(I)*P(O/I))" target="_blank"><img src="http://latex.codecogs.com/gif.latex?I&space;=&space;argmax(P(I/O))&space;=&space;argmax(\frac{P(I)*P(O/I)}{P(O)})=argmax(P(I)*P(O/I))" title="I = argmax(P(I/O)) = argmax(\frac{P(I)*P(O/I)}{P(O)})=argmax(P(I)*P(O/I))" /></a></div>
 
