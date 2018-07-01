@@ -38,7 +38,7 @@ class Perdic:
 
         self.sess = tf.Session(graph=self.graph)
         with self.sess.as_default():
-            #with self.graph.as_default():
+            with self.graph.as_default():
                 self.Saver.restore(self.sess,ckpt_path)
         
     def test(self,steps,mnist):
@@ -50,10 +50,10 @@ if __name__ == "__main__":
     mnist_path = "/Users/liyanan/Documents/Test/Tensorflow/data/mnist_data/"
     mnist_data = mnist_train.getmnist(mnist_path)
 
-    #for model_path in model_list:
-    #    steps = model_path.split("-")[-1]
-    #    instance = Perdic(model_path)
-    #    instance.test(steps,mnist_data)
+    for model_path in model_list:
+        steps = model_path.split("-")[-1]
+        instance = Perdic(model_path)
+        instance.test(steps,mnist_data)
 
-    instance = Perdic("/Users/liyanan/Documents/Test/Tensorflow/models/model_ckpt/model_minst/mnist_model.ckpt-18001")
-    instance.test("18001",mnist_data)
+    #instance = Perdic("/Users/liyanan/Documents/Test/Tensorflow/models/model_ckpt/model_minst/mnist_model.ckpt-18001")
+    #instance.test("18001",mnist_data)
