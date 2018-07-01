@@ -25,6 +25,8 @@ tf.concat([col1,col2],0)  ==> 将张量col1和col2按照axis=0合并为一个新
 Session是Tensorflow为了控制的关键语句，运行Session.run(result/option)可以获得你要的运算结果或者是你要运算的部分。
 
 会话拥有并管理Tensorflow程序运行时的所有资源，当所有计算完成之后需要关闭会话来对资源进行回收，否则可能出现资源泄露的情况。
+
+如果在一个进程中创建了多个Graph，则需要创建不同的Session来加载每个Graph，而每个Graph则可以加载在多个Session中进行计算。s
 **变量(Variable)**
 
 在 Tensorflow 中，变量的作用就是保存和更新神经网络中的参数；在Tensorflow中设定了变量，那么对其进行初始化将是十分重要的；

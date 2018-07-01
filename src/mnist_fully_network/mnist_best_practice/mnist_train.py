@@ -36,7 +36,7 @@ def train(mnist,num_examples):
 
     train_op = tf.group(train_step,moving_average_op)
 
-    Saver = tf.train.Saver()
+    Saver = tf.train.Saver(max_to_keep=15)
     init = tf.global_variables_initializer()
 
     with tf.Session() as sess:
@@ -50,7 +50,6 @@ def train(mnist,num_examples):
                 all_loss = sess.run(loss,feed_dict={input_x:mnist.train.images,input_y:mnist.train.labels})
 
                 print("After training "+str(i)+", the batch loss is "+str(batch_loss)+", and all loss is "+str(all_loss))
-
                 Saver.save(sess,os.path.join(MODEL_PATH,MODEL_NAME),global_step=global_step)
 
 def getmnist(mnist_path):
@@ -58,7 +57,7 @@ def getmnist(mnist_path):
     return mnist
 
 if __name__ == "__main__":
-    mnist_path = "/Users/liyanan/Documents/Test/Tensorflow/src/tesorflow_test/data/mnist_data/"
+    mnist_path = "/Users/liyanan/Documents/Test/Tensorflow/data/mnist_data/"
     mnist_data = getmnist(mnist_path)
     train_num_examples = mnist_data.train.num_examples
     train(mnist_data,train_num_examples)
