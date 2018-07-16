@@ -60,5 +60,5 @@ def get_minst_class_num():
 
 if __name__ == "__main__":
     #getcwd()
-    #mnistInfo()
-    get_minst_class_num()
+    mnistInfo()
+    #get_minst_class_num()

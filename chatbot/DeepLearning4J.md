@@ -231,6 +231,8 @@ Adadelta是对Adagrad的一个扩展，其目的在于采用一阶的方法，�
 
 ##3, 卷积神经网络
 
+
+
 #引用
 
 [1, 循环神经网络介绍] <http://blog.csdn.net/heyongluoyao8/article/details/48636251>
