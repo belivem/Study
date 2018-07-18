@@ -2,6 +2,7 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 import mnist_inference as infer
 import numpy as np
+import time
 
 MODEL_PATH = "/Users/liyanan/Documents/Test/Tensorflow/models/model_ckpt/model_minst/"
 
@@ -26,25 +27,28 @@ def train(mnist,num_examples):
     loss = tf.reduce_mean(cross_entroy) + tf.add_n(tf.get_collection("losses"))
 
     #define the moving average
-    ema = tf.train.ExponentialMovingAverage(decay=MOVING_AVERAGE_DECAY,num_updates=global_step)
-    moving_average_op = ema.apply(tf.trainable_variables())   
+ #   ema = tf.train.ExponentialMovingAverage(decay=MOVING_AVERAGE_DECAY,num_updates=global_step)
+ #   moving_average_op = ema.apply(tf.trainable_variables())   
 
     #define the learning_rate and train_step
     learning_rate = tf.train.exponential_decay(LEARNING_RATE_BASE,global_step=global_step,decay_steps=num_examples/BATCH_SIZE,decay_rate=LEARNING_RATE_DECAY,name="learning_rate_decay")
     train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss,global_step=global_step)
 
-    train_op = tf.group(train_step,moving_average_op)
+    train_op = train_step
+    #train_op = tf.group(train_step,moving_average_op)
 
     init = tf.global_variables_initializer()
     with tf.Session() as sess:
         sess.run(init)
         for  i in range(TRAINING_STEP):
+            
             batch_x,batch_y = mnist.train.next_batch(BATCH_SIZE)
             reshape_batch_x = np.reshape(batch_x,(BATCH_SIZE,infer.INPUT_HIGHT,infer.INPUT_WIDTH,infer.INPUT_DEEPTH))
-            sess.run(train_op,feed_dict={input_x:reshape_batch_x,input_y:batch_y})
+            
+            _,batch_loss = sess.run([train_op,loss],feed_dict={input_x:reshape_batch_x,input_y:batch_y})
 
             if i % 1000 == 0:
-                batch_loss = sess.run(loss,feed_dict={input_x:reshape_batch_x,input_y:batch_y})
+                #batch_loss = sess.run(loss,feed_dict={input_x:reshape_batch_x,input_y:batch_y})
                 print("After training "+str(i)+", the batch loss is "+str(batch_loss))
 
 def getmnist(mnist_path):
@@ -55,4 +59,8 @@ if __name__ == "__main__":
     mnist_path = "/Users/liyanan/Documents/Test/Tensorflow/data/mnist_data/"
     mnist = getmnist(mnist_path)
     train_num_examples = mnist.train.num_examples
+    
+    start = time.time()
     train(mnist,train_num_examples)
+    end = time.time()
+    print("Traing mnist cnn costs "+str(end - start)+" seconds")

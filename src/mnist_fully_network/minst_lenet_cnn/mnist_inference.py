@@ -40,28 +40,28 @@ def inference(input,train,regularizer):
         conv2_pool = tf.nn.max_pool(conv2_result,ksize=[1,POOL2_SIZE,POOL2_SIZE,1],strides=[1,2,2,1],padding="SAME")
 
     #TransForm conv matrixs to nodes list
-        #batch_size = conv2_pool.get_shape()[0].value
-        #input_hight = conv2_pool.get_shape()[1].value
-        #input_width = conv2_pool.get_shape()[2].value
-        #input_deepth = conv2_pool.get_shape()[3].value
-        #nodes = input_hight*input_width*input_deepth
-        #fc_input = tf.reshape(conv2_pool,[batch_size,nodes])
+        batch_size = conv2_pool.get_shape()[0].value
+        input_hight = conv2_pool.get_shape()[1].value
+        input_width = conv2_pool.get_shape()[2].value
+        input_deepth = conv2_pool.get_shape()[3].value
+        nodes = input_hight*input_width*input_deepth
+        fc_input = tf.reshape(conv2_pool,[batch_size,nodes])
 
-        pool_shape = conv2_pool.get_shape().as_list()
-        nodes = pool_shape[1] * pool_shape[2] * pool_shape[3]
-        reshaped = tf.reshape(conv2_pool, [pool_shape[0], nodes])
+        #pool_shape = conv2_pool.get_shape().as_list()
+        #nodes = pool_shape[1] * pool_shape[2] * pool_shape[3]
+        #reshaped = tf.reshape(conv2_pool, [pool_shape[0], nodes])
         
     #FULLY_CONNECT LAYER1
     with tf.variable_scope("fully_connetc1"):
         fc1_weights = tf.get_variable("fc1_weights",shape=[nodes,FULLY_C1],initializer=tf.truncated_normal_initializer(stddev=1.0))
         fc1_biases = tf.get_variable("fc1_biases",shape=[FULLY_C1],initializer=tf.constant_initializer(0.0))
-        fc1_result = tf.nn.relu(tf.matmul(reshaped,fc1_weights) + fc1_biases)
+        fc1_result = tf.nn.relu(tf.matmul(fc_input,fc1_weights) + fc1_biases)
 
         if regularizer != None:
             tf.add_to_collection("losses",regularizer(fc1_weights))
 
-        if train:
-            fc1_result = tf.nn.dropout(fc1_result,0.5)
+        #if train:
+        #    fc1_result = tf.nn.dropout(fc1_result,0.5)
 
     #FULLY_CONNECT LAYER2
     with tf.variable_scope("fully_connetc2"):
