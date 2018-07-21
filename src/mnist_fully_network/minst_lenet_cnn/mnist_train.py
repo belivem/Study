@@ -14,8 +14,8 @@ LEARNING_RATE_DECAY = 0.9
 MOVING_AVERAGE_DECAY = 0.99
 
 def train(mnist,num_examples):
-    input_x = tf.placeholder(tf.float32,shape=[BATCH_SIZE,infer.INPUT_HIGHT,infer.INPUT_WIDTH,infer.INPUT_DEEPTH],name="input_x")
-    input_y = tf.placeholder(tf.float32,shape=[BATCH_SIZE,infer.INPUT_LABELS],name="input_y")
+    input_x = tf.placeholder(tf.float32,shape=[None,infer.INPUT_HIGHT,infer.INPUT_WIDTH,infer.INPUT_DEEPTH],name="input_x")
+    input_y = tf.placeholder(tf.float32,shape=[None,infer.INPUT_LABELS],name="input_y")
 
     regularizer = tf.contrib.layers.l2_regularizer(REGULARIZATION_RATE)
     predict = infer.inference(input_x,True,regularizer)
@@ -60,6 +60,7 @@ if __name__ == "__main__":
     mnist = getmnist(mnist_path)
     train_num_examples = mnist.train.num_examples
     
+    print("Mnist CNN training start...")
     start = time.time()
     train(mnist,train_num_examples)
     end = time.time()
