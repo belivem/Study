@@ -207,7 +207,10 @@ Adadelta是对Adagrad的一个扩展，其目的在于采用一阶的方法，�
 <img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/FocderlHxjXwR9KsrXg4rkEDaNaWV3zIgRaikVsDIpg!/b/dEIBAAAAAAAA&bo=SgPZAQAAAAADB7M!&rf=viewer_4" width="800" height="400" alt="updater算法"/>
 </div>
 
-###1.3, 损失函数
+###1.3, 防止过拟合方法
+大规模神经网络的两大缺陷：1，费时。2，容易过拟合。
+
+####1.3.1, L1和L2正则化
 
 **L1正则化**
 	L1正则化使得参数变得更为稀疏，会有更多的参数变为0，从而达到类似特征选取的功能，但是L1正则化求导艰难
@@ -223,7 +226,29 @@ Adadelta是对Adagrad的一个扩展，其目的在于采用一阶的方法，�
 
 公式前半部分为经验风险，整体为结构风险，其中R(w)为正则项，常见为L1和L2正则项。
 
-**交叉熵损失函数：**
+
+####1.3.2, dropOut
+
+DropOut方法指训练模型时，随机让网络的某些**隐藏层节点**的权重不工作，不工作的那些节点可暂时认为不是网络结构的一部分，但是其对应的权重需要保留下来(因为下次可能就又工作了)。
+
+在标准神经网络中，每个参数接收的导数表明其应该如何变化才能使最终损失函数降低，并给定所有其它神经网络单元的状态。因此神经单元可能以一种可以修正其它神经网络单元的错误的方式进行改变。而这就可能导致复杂的共适应(co-adaptations)。由于这些共适应现象没有推广到未见的数据，将导致过拟合。我们假设对每个隐藏层的神经网络单元，Dropout通过使其它隐藏层神经网络单元不可靠从而阻止了共适应的发生。因此，一个隐藏层神经元不能依赖其它特定神经元去纠正其错误。
+
+DropOut核心思想:通过阻止特征检测器的共同作用来提高神经网络的性能。理由如下：
+
+	1. 由于每次用输入网络的样本进行权值更新时，隐含节点都是以一定概率随机出现，因此不能保证每2个隐含节点每次都同时出现，这样权值的更新不再依赖于有固定关系隐含节点的共同作用，阻止了某些特征仅仅在其它特定特征下才有效果的情况。
+	2. 可以将dropout看作是模型平均的一种。对于每次输入到网络中的样本（可能是一个样本，也可能是一个batch的样本），其对应的网络结构都是不同的，但所有的这些不同的网络结构又同时share隐含节点的权值。这样不同的样本就对应不同的模型，是bagging的一种极端情况。
+
+DropOut步骤：
+
+	1. 随机删除网络中一半的隐藏神经元，而输入输出神经元保持不变[保存删除神经元的权值]。
+	2. 前向传播输入值，后梯度下降法更新有效神经元的权值。
+	3. DropOut的单位为batch，恢复被删除单元的权值[重新合入网络]，重复1，2步
+
+DropOut方法与滑动平均模型方法有异曲同工之妙，不同的是滑动平均模型在于平均化参数，而DropOut方法在于平均化网络。
+
+问题一: dropOut方法为何只用于隐藏层?
+
+答：1，dropOut不能用于输入层：因为输入层使用dropout时，可能直接将相对重要的输入特征做删除，影响最终的结果。2, dropOut不能用于输出层：因为dropOut是随机的，可能会将正确的结果分类节点删除。3, dropOut也是可以用于卷积层，但是首先从作用上来看，卷积层的目的在于特征提取而不是特征综合，故而效果可能不大。而对于卷积层强制使用dropOut相当于增加了噪声，对于小卷积核[卷积核不应该是节点，而应该存放参数，而卷积之后的输出可以看做是节点]不推荐。
 
 
 ##2, 循环神经网络
@@ -231,7 +256,32 @@ Adadelta是对Adagrad的一个扩展，其目的在于采用一阶的方法，�
 
 ##3, 卷积神经网络
 
+###3.1， Padding
 
+Tensorflow中的padding操作，主要分为两种"VALID"和"SAME"，其中"VALID"代表不进行全0填充，而 "SAME"代表全0填充。
+
+引入全0填充原因：
+	
+CNN中，输入数据为矩阵，卷积过后其尺寸往往缩小，这就使得矩阵的边缘部分只会参加一次运算，而其他部分则参加多次，从而导致结果弱化或者丢失边缘信息[尽管大多数情况下边缘信息不重要，但是不排除边缘信息有可能会重要]。
+
+Tensorflow中的padding的计算公式如下：
+
+	1, 输入矩阵: W*W
+	2, Filter矩阵: F*F
+	3, Stride值S,步长 
+	4, 输出值的newheight,newwidth
+
+**Padding = VALID:**
+
+<div align=center>
+<a href="https://www.codecogs.com/eqnedit.php?latex=newhight&space;=&space;newwidth&space;=&space;\left&space;\lceil&space;(W&space;-&space;F&plus;1)/S&space;\right&space;\rceil" target="_blank"><img src="https://latex.codecogs.com/gif.latex?newhight&space;=&space;newwidth&space;=&space;\left&space;\lceil&space;(W&space;-&space;F&plus;1)/S&space;\right&space;\rceil" title="newhight = newwidth = \left \lceil (W - F+1)/S \right \rceil" /></a></div>
+
+**Padding = SAME:**
+
+<div align=center>
+<a href="https://www.codecogs.com/eqnedit.php?latex=newhight&space;=&space;newwidth&space;=&space;\left&space;\lceil&space;W/S&space;\right&space;\rceil" target="_blank"><img src="https://latex.codecogs.com/gif.latex?newhight&space;=&space;newwidth&space;=&space;\left&space;\lceil&space;W/S&space;\right&space;\rceil" title="newhight = newwidth = \left \lceil W/S \right \rceil" /></a></div>
+
+从公式中可以看出,tensorflow中padding的圈数必须符合以上的公式，由内部计算出来，可能左右、上下都不相等[左右上下分别对应着特定的公式]。
 
 #引用
 
@@ -246,5 +296,7 @@ Adadelta是对Adagrad的一个扩展，其目的在于采用一阶的方法，�
 [5, numpy.random] <https://blog.csdn.net/vicdd/article/details/52667709>
 
 [6, Tensorflow的可视化工具Tensorboard的初步使用] <https://blog.csdn.net/sinat_33761963/article/details/62433234>
+
+[7, Tensorflow中卷积的padding操作] <https://www.jianshu.com/p/05c4f1621c7e>
 
 
