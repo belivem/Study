@@ -256,7 +256,58 @@ DropOut方法与滑动平均模型方法有异曲同工之妙，不同的是滑�
 
 ##3, 卷积神经网络
 
-###3.1， Padding
+卷积神经网络(CNN)是一种新型的网络架构方式，主要有卷积层、池化层和全连接层组成。通常意义上讲：卷积层的主要功能在于特征提取，池化层的主要功能在于特征选择。
+
+###3.1, 基本概念
+
+####卷积层
+
+<div align=center>
+<img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/D*U.W1YpzS8L8NvXZgQrBWSBAtms2pofNKhQcFgdW28!/b/dAgBAAAAAAAA&bo=zAIMAQAAAAADB.E!&rf=viewer_4" width="500" height="200" alt="卷积层"/>
+</div>
+	
+卷积层的作用在于特征提取功能，常用的卷积层大小一般为3-3，5-5等，卷积层可有多个权重矩阵组成。 
+
+**权重矩阵的个数称之为卷积层的深度， 每个权重矩阵同时处理的矩阵深度和当前层神经网络输入矩阵的深度是一致的，可看做提取一组同维度的特征，PS:卷积层也可提取不同维度的特征，详见Inception-v3模型。**
+
+由此可见，一个卷积层可设置参数如下：
+
+1. 权重矩阵的边长
+2. 权重矩阵的深度
+3. 卷积层的步数
+4. 是否采用全“0”填充[仅适用于计算]
+	
+卷积层的前向传播过程就是通过将一个过滤器从神经网络当前层的左上角移动至右下角。
+
+卷积层参数个数： 输入层矩阵32-32-3, 第一层卷积层尺寸5-5，深度16的过滤器，其参数个数为5-5-3-16+16个参数【-代表相乘,其中5-5-3可看做是**一个神经元**的权值矩阵】。**由此可知，卷积层的参数个数与图片的大小无关，而只与卷积层的尺寸、深度和输入矩阵的深度有关。**
+
+通常来讲，卷机网络在过滤器的深度上普遍采用逐层递增的方式，通常下一层的卷积层深度旺旺是上一层卷积层深度的2倍。
+
+
+
+####池化层
+
+<div align=center>
+<img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/Inx17J.L7BQw8o1FaJKkWyh.YksKX6Jc5YFz6J8RTms!/b/dDIBAAAAAAAA&bo=xwIHAQAAAAADF*E!&rf=viewer_4" width="500" height="200" alt="池化层"/>
+</div>
+
+池化层主要分为两种:"max_pool()"和"mean_pool()"。其作用在于大规模的缩小输入矩阵的大小，加快计算速度，并且池化层还具有防止过拟合的作用[根据值的大小，将一些不是很关键的特征去掉，仅留下作用比较大的特征]。
+
+池化层与卷积层有着一个重要的区别：卷积层使用的过滤器是横跨整个深度的，而池化层使用的过滤器只影响一个深度的节点。池化层可设置参数如下：
+
+1. 池化层过滤器尺寸。
+2. 池化层步长。
+3. 是否采用全“0”填充[仅适用于计算]
+
+池化层举例：
+
+	pool = tf.nn.max_pool(activate_conv,ksize=[1,3,3,1],strides=[1,2,2,1],padding="SAME")
+	
+其中ksize代表池化层过滤器的尺寸，而strides代表步长，其中第一维度为1代表池化层不可以跨越不同的输入样例，而第四维度为1代表池化层不可以跨越不同的节点矩阵深度。
+
+池化层的作用在于减少输入维度，提取较明显的特征。但是池化层并不是必须的，因为若改变卷积层的步长，也就相当于减少输入维度。
+
+####Padding
 
 Tensorflow中的padding操作，主要分为两种"VALID"和"SAME"，其中"VALID"代表不进行全0填充，而 "SAME"代表全0填充。
 
@@ -283,6 +334,28 @@ Tensorflow中的padding的计算公式如下：
 
 从公式中可以看出,tensorflow中padding的圈数必须符合以上的公式，由内部计算出来，可能左右、上下都不相等[左右上下分别对应着特定的公式]。
 
+###3.2, 经典网络架构
+
+####LeNet-5模型
+
+<div align=center>
+<img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/PUAU7lcICnO2fXslQmLRrESul7GsrNfS8J7g7wDd4Tw!/b/dEcBAAAAAAAA&bo=pgSmAQAAAAADByc!&rf=viewer_4" width="500" height="200" alt="LeNet-5模型"/>
+</div>
+
+如图所示，LeNet-5模型卷积神经网络共包含7层，分别为输入层、卷积层1、池化层1、卷积层2、池化层2、全连接层1和全连接层2。
+
+####Inception-v3模型 
+
+<div align=center>
+<img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/XHzzowYLHhvXFM50u9AGwFrxdXSTJEV0KDMFDlVkexc!/b/dC8BAAAAAAAA&bo=RQOfAQAAAAADB*o!&rf=viewer_4" width="500" height="200" alt="Inception-v3模型"/>
+</div>
+
+Inception-v3网络，也即GoogleNet网络。如图所示，其是将不同的卷积层通过并联的方式结合在一起。 虽然过滤器的大小不同，但是如果所有的过滤器都使用全0填充且步长为1，那么前向传播得到的结果矩阵其长宽都和输入矩阵一致，最后经过不同过滤器处理的结果矩阵可以拼接成一个更深的矩阵。
+
+###3.3，卷积神经网络的迁移学习
+
+迁移学习:将一个问题上训练好的模型通过简单的调整使其适用于一个新的问题。
+
 #引用
 
 [1, 循环神经网络介绍] <http://blog.csdn.net/heyongluoyao8/article/details/48636251>
@@ -298,5 +371,8 @@ Tensorflow中的padding的计算公式如下：
 [6, Tensorflow的可视化工具Tensorboard的初步使用] <https://blog.csdn.net/sinat_33761963/article/details/62433234>
 
 [7, Tensorflow中卷积的padding操作] <https://www.jianshu.com/p/05c4f1621c7e>
+
+[8, CS231n课程笔记翻译：卷积神经网络笔记] <https://zhuanlan.zhihu.com/p/22038289>
+
 
 
