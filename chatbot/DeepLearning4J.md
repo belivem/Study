@@ -346,9 +346,16 @@ Tensorflow中的padding的计算公式如下：
 
 ####Inception-v3模型 
 
+Inception架构的主要思想是找出如何用密集成分来近似最优的局部稀疏结。
+
 <div align=center>
 <img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/XHzzowYLHhvXFM50u9AGwFrxdXSTJEV0KDMFDlVkexc!/b/dC8BAAAAAAAA&bo=RQOfAQAAAAADB*o!&rf=viewer_4" width="500" height="200" alt="Inception-v3模型"/>
 </div>
+
+对于上图，需要知道如下知识：
+
+1. 采用不同大小的卷积核意味着不同大小的感受野，最后拼接意味着不同尺度特征的融合； 
+2.  
 
 Inception-v3网络，也即GoogleNet网络。如图所示，其是将不同的卷积层通过并联的方式结合在一起。 虽然过滤器的大小不同，但是如果所有的过滤器都使用全0填充且步长为1，那么前向传播得到的结果矩阵其长宽都和输入矩阵一致，最后经过不同过滤器处理的结果矩阵可以拼接成一个更深的矩阵。
 
@@ -374,5 +381,5 @@ Inception-v3网络，也即GoogleNet网络。如图所示，其是将不同的�
 
 [8, CS231n课程笔记翻译：卷积神经网络笔记] <https://zhuanlan.zhihu.com/p/22038289>
 
-
+[8, 深度学习卷积神经网络——经典网络GoogLeNet(Inception V3)网络的搭建与实现] <https://blog.csdn.net/loveliuzz/article/details/79135583>
 
