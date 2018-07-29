@@ -250,6 +250,32 @@ DropOut方法与滑动平均模型方法有异曲同工之妙，不同的是滑�
 
 答：1，dropOut不能用于输入层：因为输入层使用dropout时，可能直接将相对重要的输入特征做删除，影响最终的结果。2, dropOut不能用于输出层：因为dropOut是随机的，可能会将正确的结果分类节点删除。3, dropOut也是可以用于卷积层，但是首先从作用上来看，卷积层的目的在于特征提取而不是特征综合，故而效果可能不大。而对于卷积层强制使用dropOut相当于增加了噪声，对于小卷积核[卷积核不应该是节点，而应该存放参数，而卷积之后的输出可以看做是节点]不推荐。
 
+###1.4, 提高准确度
+
+####1.4.1 局部响应归一化(LRN)
+局部响应归一化技术 是一种提高深度学习准确率的一种方法，一般用于激活、池化之后。技术首次提出AlexNet模型。
+
+LRN基于如下的动机：
+	
+	被激活的神经元抑制其相邻的神经元，局部归一化即抑制其局部的相邻神经元，实现“强者愈强”。
+
+AlexNet模型是一种创新性的应用，其主要新技术点如下：
+
+	1. 成功使用ReLU作为CNN的激活函数，并验证其效果在较深的网络超过了Sigmoid，成功解决了Sigmoid在网络较深时的梯度弥散问题。虽然ReLU激活函数在很久之前就被提出了，但是直到AlexNet的出现才将其发扬光大。
+	
+	2. 训练时使用Dropout随机忽略一部分神经元，以避免模型过拟合。Dropout虽有单独的论文论述，但是AlexNet将其实用化，通过实践证实了它的效果。在AlexNet中主要是最后几个全连接层使用了Dropout。
+	
+	3. 在CNN中使用重叠的最大池化。此前CNN中普遍使用平均池化，AlexNet全部使用最大池化，避免平均池化的模糊化效果。并且AlexNet中提出让步长比池化核的尺寸小，这样池化层的输出之间会有重叠和覆盖，提升了特征的丰富性。
+
+	4. 提出了LRN层，对局部神经元的活动创建竞争机制，使得其中响应比较大的值变得相对更大，并抑制其他反馈较小的神经元，增强了模型的泛化能力。
+
+LRN公式：
+
+<div align=center>
+<img src="http://m.qpic.cn/psb?/V14Ifnin2f6pWC/Bjw47zCsKyEAO5fm78F3hYlSd5FJJrKMWBYJQorHqtE!/b/dDMBAAAAAAAA&bo=.gLzAAAAAAADByk!&rf=viewer_4" width="800" height="150" alt="LRN公式"/>
+</div>
+
+如上述公式所示,alpha,beta,n/2,k(通常情况下，其表示偏移量)都为需人为设定，其表达的含义是当前像素点的输出值与当前像素点和其前n/2，后n/2维度相同位置上的像素点平方和相关。
 
 ##2, 循环神经网络
 
@@ -383,3 +409,5 @@ Inception-v3网络，也即GoogleNet网络。如图所示，其是将不同的�
 
 [8, 深度学习卷积神经网络——经典网络GoogLeNet(Inception V3)网络的搭建与实现] <https://blog.csdn.net/loveliuzz/article/details/79135583>
 
+[9, 在AlexNet中LRN 局部响应归一化的理解]
+<https://blog.csdn.net/program_developer/article/details/79430119>
