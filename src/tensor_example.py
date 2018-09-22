@@ -1,18 +1,17 @@
+from common.formats import image_format
+from mnist_fully_network.mnist_practice import mnist_data_info
 
-import tensorflow as tf
-MODEL_PATH = "/Users/liyanan/Documents/Test/Tensorflow/models/model_ckpt/model_test/test_model.ckpt"
-
+mnist_path = "/Users/liyanan/Documents/Test/Tensorflow/data/mnist_data/"
 
 def test():
+    mnist_data_info.mnistInfo()
+    mnist = mnist_data_info.getmnist(mnist_path)
 
-    v1 = tf.Variable(tf.truncated_normal([3,2,3],dtype=tf.float32),name="v1")
-
-    init = tf.global_variables_initializer()
-    
-    with tf.Session() as sess:
-        sess.run(init)
-
-        print(v1.get_shape()[1].value)
+    images = mnist.train.images
+    labels = mnist.train.labels
+    print(type(images))
+    print("Shape of training images ==> "+str(images.shape))
+    print("Shape of training labels ==> "+str(labels.shape))
 
 if __name__ == "__main__":
     test()
