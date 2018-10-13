@@ -1,0 +1,132 @@
+#Srilm记事
+
+##Linux常用工具及命令
+
+du命令 ==> 查看文件大小：
+	 
+	du [选项] [文件]
+	du -ha  ==>查看所有文件	
+
+wc命令 ==> 查看文件行数
+
+	wc [选项] [文件]
+	wc -l message.txt  ==> 查看message.txt文件多少行
+	wc -w message.txt  ==> 查看message.txt文件多少字
+
+统计当前目录下文件/目录的个数:
+
+	ls -lR| grep "^-" | wc -l
+
+VIM工具 ==> 编辑器:
+	
+	G ==> 移动到文件的最后一行
+	gg ==> 移动到文件的第一行
+	nG ==> 移动到文件的第n行
+
+	
+
+##语言模型
+
+###语言模型相关数据
+
+	主机：  10.137.25.172,  zhangyue/zhangyue
+	
+路径：
+	
+    模型文件（ARPA）: /home/zhangyue/f00383775/asr-fst/asr-fst-v20180929-hci65000-v1/ngram-model
+    
+    原始未清洗数据 ==> /home/zhangyue/f00383775/cleaned-corpus-collection/raw-media-dept |　raw-ours
+
+    清洗数据 ==> /home/zhangyue/f00383775/cleaned-corpus-collection/cleaned/
+    
+	已分词数据 ==> /home/zhangyue/f00383775/cleaned-corpus-collection/media-dept-retokenize-temp
+
+注意：
+1. 语料来源包含两部分：媒体工程部+自有
+2. 语料包含微博、新闻和消息
+3. 数据分词在清洗语料过后
+
+###语言模型相关工具
+####SRILM训练工具
+SRILM的主要目标是支持语言模型的估计和评测。估计是从训练数据（训练集）中得到一个模型，包括最大似然估计及相应的平滑算法；而评测则是从测试集中计算其困惑度（MIT自然语言处理概率语言模型有相关介绍）。其最基础和最核心的模块是n-gram模块，这也是最早实现的模块，包括两个工具：ngram-count和ngram，相应的被用来估计语言模型和计算语言模型的困惑度。
+
+相关命令：
+
+1. **ngram-count : 训练语料中生成计数文件+计数文件中生成语言模型**
+2. **ngram : 包含了n-gram模型相关的操作，输入文件为已生成的ARPA模型文件**
+
+
+使用步骤：
+
+1. 语料库中生成n-gram计数文件
+	
+	ngram-count -text europarl-v7.ro-en.en -order 3 -write europarl-v7-count.en  
+	
+	命令解释 ==> 统计gram出现的个数  -text:统计文件  -order:设置最大的n  -write:输出文件  
+
+2. 从计数文件中生成训练语言模型
+
+	ngram-count -read europarl-v7-count.en -order 3 -lm europarl-v7-count.arpa -interpolate -kndiscount  
+	
+	命令解释 ==> 生成n-gram语言模型 -read:输入文件，-lm：输出的训练好的语言模型 -interpolate -kndiscount为平滑方法，其中-interpolate代指插值平滑，-kndiscount代指 modified　Kneser-Ney打折法
+
+3. 语言模型计算测试语料的困惑度
+
+	ngram -ppl europarl-v7-test.en -order 3 -lm europarl-v7-count.arpa >　europarl-v7-count.ppl
+
+	命令解释 ==> 基于已生成的模型计算测试机的困惑度 -ppl:后接测试文件，-lm:说明已生成的语言模型  >:输出困惑度至europarl-v7-count.ppl文件，结果文件输出如下：
+
+	file europarl-v7-test.en: 623398 sentences, 15021689 words, 50664 OOVs(未登录词)
+	
+	0 zeroprobs, logprob= -2.880091e+07(logP(T)为所有测试语料出现概率乘积的对数) ppl= 70.28661[公式10^{-{logP(T)}/{Sen+Word}}] ppl1= 83.90289[公式10^{-{logP(T)}/Word}}]
+
+注意：
+	
+1. ngram-count重要参数:
+		
+		-memuse	==> 输出内存的使用情况
+
+		-vocab file ==> 指定词汇表，训练语料中未登录词将以unknow-word替代。如果没有指定，则训练语料中所有的词汇都会加入词表中。
+	
+		-write-vocab file ==> counting processing时生成vocabulary并写入file
+
+		-sort ==> 输出按照单词词典顺序排序
+	
+		-maxent ==> 最大熵语言模型
+	
+2. ngram-count支持的平滑算法如下：
+	
+		-addsmooth ==> 加法平滑算法
+		-interpolate ==> 
+		-count-lm:  Jelinek-Mercer smoothing [线性插值]
+ 		-gtnmin|-gtnmax |-gtn ==> 都与Good Turing相关
+		-cdiscount ==> Ney's absolute discounting
+		-wbdiscount ==>  Witten-Bell discounting
+		-ndiscount ==> Ristad's natural discounting
+		-kndiscount ==> modified Kneser-Ney discounting
+		-ukndiscount ==> original Kneser-Ney discounting
+		-interpolate ==> 放在discounting方法[目前仅有Witten-Bell, absolute discounting,(original or modified) Kneser-Ney支持]前。
+	 
+	
+3. ngram重要参数:
+
+	    -memuse	==> 输出内存的使用情况
+
+		-lm file ==> 输入ARPA模型文件
+		-mix-lm file ==> 输入的第二个ARPA模型
+		-write-lm file ==> disk中写入最终模型，此命令多用于综合多个模型
+
+		-hmm ==> HMM模型相关
+		-bayes ==> 贝叶斯模型相关
+		-maxent ==> 最大熵语言模型相关
+		--loglinear-mix ==> 线性模型相关
+
+		-vocab file ==> LM中初始化一个词汇表
+		-limit-vocab ==> 不使用默认的词汇表，而使用特定的词汇表
+		-write-vocab file ==> 从LM中生成词汇表并保存文件
+
+		-renorm ==> 重新计算回退概率从而归一化模型
+		-rescore-ngram file ==> 根据已有的参数，从ARPA文件中重新创建模型
+		-ppl textfile ==> 测试语料集，计算混淆度
+		-prune ==> 未知
+		-counts ==> 未知
